@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-//import
+//import statements
 
 import android.util.Log;
 
