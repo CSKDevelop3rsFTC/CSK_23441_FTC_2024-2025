@@ -61,7 +61,7 @@ public class Meet0TeleOp extends LinearOpMode {
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         //outtakeServo.setDirection(Servo.Direction.FORWARD);
 
-        telemetry.addData(">", "Robot Ready.  Press Play.");    //
+        telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
     }
 
