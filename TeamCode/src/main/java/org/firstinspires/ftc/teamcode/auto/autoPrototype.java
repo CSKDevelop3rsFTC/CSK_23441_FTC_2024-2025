@@ -49,7 +49,7 @@ public class autoPrototype extends LinearOpMode {
         frontRightDrive.setPower(0);
         frontLeftDrive.setPower(0);
         backRightDrive.setPower(0);
-        backLeftDrive.setPower();
+        backLeftDrive.setPower(0);
     }
 
     public void vertMove(double dir, int time){ //inputs for dir is -1 or 1 (forward or backward)

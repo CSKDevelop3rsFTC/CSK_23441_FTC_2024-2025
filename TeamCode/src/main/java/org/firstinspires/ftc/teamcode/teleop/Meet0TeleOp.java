@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="MeetZero:Teleop", group="Robot")
-public class Meet0TeleOp extends LinearOpMode {
+public class   Meet0TeleOp extends LinearOpMode {
 
     //Drive Train Motors
     public DcMotor  frontLeftDrive   = null;
@@ -60,6 +60,12 @@ public class Meet0TeleOp extends LinearOpMode {
 
         backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         //outtakeServo.setDirection(Servo.Direction.FORWARD);
+        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
@@ -91,6 +97,52 @@ public class Meet0TeleOp extends LinearOpMode {
         }
 
     }
+
+    /**
+
+    public void moveSlides(int position, DcMotorSimple.Direction direction, double power) {
+        outtakeMotor1.setTargetPosition(position);
+        outtakeMotor1.setTargetPosition(position);
+        outtakeMotor1.setDirection(direction);
+        outtakeMotor1.setDirection(direction);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor1.setPower(power);
+        outtakeMotor1.setPower(power);
+    }
+
+    public void drop(){
+        if(Math.abs( (outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2 ) >60) {
+            moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition())-100), DcMotorSimple.Direction.FORWARD, 0.5);
+        }
+
+
+    }
+
+    public void reset() {
+        if (Math.abs((outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2) > 50) {
+            moveSlides(50, DcMotorSimple.Direction.FORWARD, 0.95);
+
+        }
+    }
+
+    public void stopOuttake(){
+        if(!outtakeMotor1.isBusy() && !outtakeMotor2.isBusy()) {
+            outtakeMotor1.setPower(0.0);
+            outtakeMotor2.setPower(0.0);
+        }
+    }
+
+    public void reInitOuttake() {
+        outtakeMotor1.setPower(0.0);
+        outtakeMotor2.setPower(0.0);
+        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    **/
 
     public void run(double verticalPosition, double horizontalPosition, double pivot){
 
