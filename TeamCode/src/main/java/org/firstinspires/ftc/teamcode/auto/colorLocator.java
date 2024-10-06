@@ -60,8 +60,7 @@ public class colorLocator extends LinearOpMode
 
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorLocator)
-                .setCameraResolution(new Size(320, 240))
-                .setStreamFormat(VisionPortal.StreamFormat.YUY2)
+                .setCameraResolution(new Size(640, 360))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .build();
 
@@ -90,15 +89,15 @@ public class colorLocator extends LinearOpMode
                 telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                         b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
                 //left and right check
-                if(boxFit.center.x < 270) {
+                if(boxFit.center.x < 295) {
                     telemetry.addLine("Move from left to center");
-                } else if(boxFit.center.x > 330) {
+                } else if(boxFit.center.x > 355) {
                     telemetry.addLine("Move from right to center");
                 }
 
-                if(b.getContourArea() > 5600) {
+                if(b.getContourArea() > 13900) {
                     telemetry.addLine("Too close to robot");
-                } else if(b.getContourArea() < 6800) {
+                } else if(b.getContourArea() < 3900) {
                     telemetry.addLine("Too far from the robot");
                 }
 
