@@ -48,7 +48,7 @@ public class colorLocator extends LinearOpMode
     @Override
     public void runOpMode()
     {
-
+        autoPrototype prototype = new autoPrototype();
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
@@ -91,14 +91,19 @@ public class colorLocator extends LinearOpMode
                 //left and right check
                 if(boxFit.center.x < 295) {
                     telemetry.addLine("Move from left to center");
+                    //prototype.horizMove(-1,200);
                 } else if(boxFit.center.x > 355) {
                     telemetry.addLine("Move from right to center");
+                    //prototype.horizMove(1,200);
                 }
 
                 if(b.getContourArea() > 13900) {
                     telemetry.addLine("Too close to robot");
+                    //prototype.vertMove(-1,100);
                 } else if(b.getContourArea() < 3900) {
                     telemetry.addLine("Too far from the robot");
+                    //prototype.vertMove(1,300);
+
                 }
 
             }
