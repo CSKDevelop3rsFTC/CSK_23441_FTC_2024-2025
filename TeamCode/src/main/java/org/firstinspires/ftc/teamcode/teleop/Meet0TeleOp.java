@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="MeetZero:Teleop", group="Robot")
@@ -30,7 +31,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    hzfourbarServo2  = null;
     public Servo    hzSlidesServo1   = null;
     public Servo    hzSlidesServo2   = null;
-    public Servo    intakeServo      = null;
+    public CRServo  intakeServo      = null;
 
     //Outtake Servos
     public Servo    vFourbarServo1   = null;
@@ -51,21 +52,24 @@ public class   Meet0TeleOp extends LinearOpMode {
         hzfourbarServo2   =     hardwareMap.get(Servo.class, "hzfourbarServo2");
         hzSlidesServo1    =      hardwareMap.get(Servo.class, "hzSlidesServo1");
         hzSlidesServo2    =      hardwareMap.get(Servo.class, "hzSlidesServo2");
-        intakeServo       =         hardwareMap.get(Servo.class, "intakeServo");
+        intakeServo       =         hardwareMap.get(CRServo.class, "intakeServo");
 
         vFourbarServo1    =      hardwareMap.get(Servo.class, "vFourbarServo1");
         vFourbarServo2    =      hardwareMap.get(Servo.class, "vFourbarServo2");
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
 
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        //outtakeServo.setDirection(Servo.Direction.FORWARD);
-        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        /**outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
@@ -93,7 +97,7 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
 
         else {
-            driveMovement(0.75);
+            driveMovement(0.1);
         }
 
     }
