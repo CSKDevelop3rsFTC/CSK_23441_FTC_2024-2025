@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -26,7 +27,7 @@ public class autoPrototype extends LinearOpMode {
     public Servo    hzfourbarServo2  = null;
     public Servo    hzSlidesServo1   = null;
     public Servo    hzSlidesServo2   = null;
-    public Servo    intakeServo      = null;
+    public CRServo  intakeServo      = null;
 
     //Outtake Servos
     public Servo    vFourbarServo1   = null;
@@ -35,10 +36,27 @@ public class autoPrototype extends LinearOpMode {
     public Servo    clawServo        = null;
 
     public double driveSpeed = 0.5;
- /*   public void initialize(){
+    public void initialize(){
+        frontLeftDrive    =    hardwareMap.get(DcMotor.class, "frontLeftDrive");
+        frontRightDrive   =   hardwareMap.get(DcMotor.class, "frontRightDrive");
+        backLeftDrive     =     hardwareMap.get(DcMotor.class, "backLeftDrive");
+        backRightDrive    =    hardwareMap.get(DcMotor.class, "backRightDrive");
 
+        outtakeMotor1     =     hardwareMap.get(DcMotor.class, "outtakeMotor1");
+        outtakeMotor2     =     hardwareMap.get(DcMotor.class, "outtakeMotor2");
 
-    }*/
+        hzfourbarServo1   =     hardwareMap.get(Servo.class, "hzfourbarServo1");
+        hzfourbarServo2   =     hardwareMap.get(Servo.class, "hzfourbarServo2");
+        hzSlidesServo1    =      hardwareMap.get(Servo.class, "hzSlidesServo1");
+        hzSlidesServo2    =      hardwareMap.get(Servo.class, "hzSlidesServo2");
+        intakeServo       =       hardwareMap.get(CRServo.class, "intakeServo");
+
+        vFourbarServo1    =      hardwareMap.get(Servo.class, "vFourbarServo1");
+        vFourbarServo2    =      hardwareMap.get(Servo.class, "vFourbarServo2");
+        clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
+        clawServo         =           hardwareMap.get(Servo.class, "clawServo");
+
+    }
 
     public void stopRobot() {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -91,9 +109,11 @@ public class autoPrototype extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        initialize();
         telemetry.addData("Status", "Initializing");
         telemetry.update();
 
+        //movement check
         vertMove(1, 500);
         horizMove(1,500);
         vertMove(-1,300);
