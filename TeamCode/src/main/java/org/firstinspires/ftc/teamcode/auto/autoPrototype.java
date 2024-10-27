@@ -35,7 +35,7 @@ public class autoPrototype extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
-    public double driveSpeed = 0.5;
+    public double driveSpeed = 0.3;
     public void initialize(){
         frontLeftDrive    =    hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive   =   hardwareMap.get(DcMotor.class, "frontRightDrive");
@@ -61,8 +61,8 @@ public class autoPrototype extends LinearOpMode {
     public void stopRobot() {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontRightDrive.setPower(0);
         frontLeftDrive.setPower(0);
@@ -73,8 +73,8 @@ public class autoPrototype extends LinearOpMode {
     public void vertMove(double dir, int time){ //inputs for dir is -1 or 1 (forward or backward)
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontRightDrive.setPower(driveSpeed * dir);
         frontLeftDrive.setPower(driveSpeed * dir);
@@ -85,8 +85,8 @@ public class autoPrototype extends LinearOpMode {
     public void horizMove(double dir, int time){ // -1 for left 1 for positive  for
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
 
         frontRightDrive.setPower(driveSpeed * dir);
         frontLeftDrive.setPower(driveSpeed * dir);
@@ -97,8 +97,8 @@ public class autoPrototype extends LinearOpMode {
     public void pivot(double dir, int time){ // -1 for turnLeft 1 for turnRight
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontRightDrive.setPower(driveSpeed * dir);
         frontLeftDrive.setPower(driveSpeed * dir);
@@ -116,10 +116,10 @@ public class autoPrototype extends LinearOpMode {
         //movement check
         vertMove(1, 500);
         horizMove(1,500);
-        vertMove(-1,300);
-        vertMove(-1,300);
+        vertMove(-1,500);
+        horizMove(-1,500);
         pivot(1,600);
-        pivot(-1,300);
+        pivot(-1,600);
 
         stopRobot();
 
