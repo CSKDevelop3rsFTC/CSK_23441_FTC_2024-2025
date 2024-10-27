@@ -40,8 +40,8 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    clawServo        = null;
 
     public double   speedDrive       = 0.65;
-    public double   clawParam        = 0.1;
-    public double   hzParam          = 0.05;
+    public double   clawParam        = 0.3;
+    public double   hzParam          = 0.3;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 0.3;
 
@@ -107,16 +107,20 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void hzMovement() {
-        double hzServo1 = hzfourbarServo1.getPosition();
-        double hzServo2 = hzfourbarServo2.getPosition();
+        double hzServo1;
+        double hzServo2;
         if (gamepad1.left_trigger > 0) {
+            hzServo1 = hzfourbarServo1.getPosition();
+            hzServo2 = hzfourbarServo2.getPosition();
             hzSlidesServo1.setDirection(Servo.Direction.FORWARD);
-            hzSlidesServo2.setDirection(Servo.Direction.FORWARD);
+            hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
             hzSlidesServo1.setPosition(hzServo1 + hzParam);
             hzSlidesServo2.setPosition(hzServo2 + hzParam);
         }
         else if (gamepad1.right_trigger > 0) {
-            hzSlidesServo1.setDirection(Servo.Direction.REVERSE);
+            hzServo1 = hzfourbarServo1.getPosition();
+            hzServo2 = hzfourbarServo2.getPosition();
+            hzSlidesServo1.setDirection(Servo.Direction.FORWARD);
             hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
             hzSlidesServo1.setPosition(hzServo1 - hzParam);
             hzSlidesServo2.setPosition(hzServo2 - hzParam);
@@ -124,7 +128,13 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void driveController() {
-        driveMovement(speedDrive);
+        if (gamepad1.right_trigger > 0) {
+            driveMovement(1);
+        }
+
+        else {
+            driveMovement(speedDrive);
+        }
     }
 
     public void clawOpen() {
