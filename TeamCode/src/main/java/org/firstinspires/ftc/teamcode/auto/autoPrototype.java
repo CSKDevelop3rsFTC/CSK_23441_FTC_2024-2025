@@ -35,7 +35,7 @@ public class autoPrototype extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
-    public double driveSpeed = 0.65;
+    public double driveSpeed = 0.5;
     public void initialize(){
         frontLeftDrive    =    hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive   =   hardwareMap.get(DcMotor.class, "frontRightDrive");
@@ -121,12 +121,12 @@ public class autoPrototype extends LinearOpMode {
         pivot(1,600); rotate clockwise
         pivot(-1,300);
 */
-        vertMove(1,650);
+        vertMove(1,700);
         //place sample
-        vertMove(-1,650);
-        horizMove(-1,650);
-        vertMove(-1,3900);
-        horizMove(1,650); //park in observation zone
+        vertMove(-1,700);
+        horizMove(-1,700);
+        vertMove(-1,4000);
+        horizMove(1,700); //park in observation zone
 
         stopRobot();
 
