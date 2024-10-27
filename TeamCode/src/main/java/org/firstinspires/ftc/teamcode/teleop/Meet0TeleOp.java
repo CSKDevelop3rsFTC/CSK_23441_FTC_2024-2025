@@ -39,6 +39,12 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
+    public double   speedDrive       = 0.65;
+    public double   clawParam        = 0.1;
+    public double   hzParam          = 0.05;
+    public boolean  activeClaw       = false;
+    public double   intakeSpeed      = 0.3;
+
     public void initialize(){
         frontLeftDrive    =    hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive   =   hardwareMap.get(DcMotor.class, "frontRightDrive");
@@ -65,11 +71,11 @@ public class   Meet0TeleOp extends LinearOpMode {
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         /**outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+         outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
@@ -91,63 +97,101 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void spinTake() {
-        if (gamepad1.left_trigger > 0) {
-
+        if (gamepad1.left_bumper) {
+            intakeServo.setPower(intakeSpeed);
         }
-        else {
 
+        else if (gamepad1.left_bumper) {
+            intakeServo.setPower(intakeSpeed);
+        }
+    }
+
+    public void hzMovement() {
+        double hzServo1 = hzfourbarServo1.getPosition();
+        double hzServo2 = hzfourbarServo2.getPosition();
+        if (gamepad1.left_trigger > 0) {
+            hzSlidesServo1.setDirection(Servo.Direction.FORWARD);
+            hzSlidesServo2.setDirection(Servo.Direction.FORWARD);
+            hzSlidesServo1.setPosition(hzServo1 + hzParam);
+            hzSlidesServo2.setPosition(hzServo2 + hzParam);
+        }
+        else if (gamepad1.right_trigger > 0) {
+            hzSlidesServo1.setDirection(Servo.Direction.REVERSE);
+            hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
+            hzSlidesServo1.setPosition(hzServo1 - hzParam);
+            hzSlidesServo2.setPosition(hzServo2 - hzParam);
         }
     }
 
     public void driveController() {
-            driveMovement(0.65 );
+        driveMovement(speedDrive);
+    }
+
+    public void clawOpen() {
+        double claw1 = clawServo.getPosition();
+        if (gamepad2.x) {
+            activeClaw = true;
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(claw1 + clawParam);
+        }
+    }
+
+    public void clawClose() {
+        double claw2 = clawServo.getPosition();
+        if (gamepad2.b) {
+            if (!activeClaw) {
+                clawServo.setDirection(Servo.Direction.REVERSE);
+                clawServo.setPosition(claw2 - clawParam);
+                activeClaw = false;
+            }
+        }
     }
 
     /**
 
-    public void moveSlides(int position, DcMotorSimple.Direction direction, double power) {
-        outtakeMotor1.setTargetPosition(position);
-        outtakeMotor2.setTargetPosition(position);
-        outtakeMotor1.setDirection(direction);
-        outtakeMotor2.setDirection(direction);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        outtakeMotor1.setPower(power);
-        outtakeMotor2.setPower(power);
-    }
+     public void moveSlides(int position, DcMotorSimple.Direction direction, double power) {
+     outtakeMotor1.setTargetPosition(position);
+     outtakeMotor2.setTargetPosition(position);
+     outtakeMotor1.setDirection(direction);
+     outtakeMotor2.setDirection(direction);
+     outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+     outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+     outtakeMotor1.setPower(power);
+     outtakeMotor2.setPower(power);
+     }
 
-    public void drop(){
-        if(Math.abs( (outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2 ) >60) {
-            moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition())-100), DcMotorSimple.Direction.FORWARD, 0.5);
-        }
+     public void drop(){
+     if(Math.abs( (outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2 ) >60) {
+     moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition())-100), DcMotorSimple.Direction.FORWARD, 0.5);
+     }
 
 
-    }
+     }
 
-    public void reset() {
-        if (Math.abs((outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2) > 50) {
-            moveSlides(50, DcMotorSimple.Direction.FORWARD, 0.95);
+     public void reset() {
+     if (Math.abs((outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2) > 50) {
+     moveSlides(50, DcMotorSimple.Direction.FORWARD, 0.95);
 
-        }
-    }
+     }
+     }
 
-    public void stopOuttake(){
-        if(!outtakeMotor1.isBusy() && !outtakeMotor2.isBusy()) {
-            outtakeMotor1.setPower(0.0);
-            outtakeMotor2.setPower(0.0);
-        }
-    }
+     public void stopOuttake(){
+     if(!outtakeMotor1.isBusy() && !outtakeMotor2.isBusy()) {
+     outtakeMotor1.setPower(0.0);
+     outtakeMotor2.setPower(0.0);
+     }
+     }
 
-    public void reInitOuttake() {
-        outtakeMotor1.setPower(0.0);
-        outtakeMotor2.setPower(0.0);
-        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+     public void reInitOuttake() {
+     outtakeMotor1.setPower(0.0);
+     outtakeMotor2.setPower(0.0);
+     outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+     outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+     outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+     outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+     }
 
-    **/
+     **/
 
     public void run(double verticalPosition, double horizontalPosition, double pivot){
 
@@ -180,6 +224,14 @@ public class   Meet0TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             driveController();
+
+            //clawOpen();
+
+            //clawClose();
+
+            //spinTake();
+
+            hzMovement();
 
             sleep(50);
 
