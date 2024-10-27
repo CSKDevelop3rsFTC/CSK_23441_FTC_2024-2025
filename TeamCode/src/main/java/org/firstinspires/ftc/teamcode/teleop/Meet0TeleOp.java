@@ -59,8 +59,8 @@ public class   Meet0TeleOp extends LinearOpMode {
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
 
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -90,29 +90,30 @@ public class   Meet0TeleOp extends LinearOpMode {
         backLeftDrive.setPower(((vertical + horizontal)+pivot) * driveSpeed);
     }
 
-    public void driveController() {
+    public void spinTake() {
+        if (gamepad1.left_trigger > 0) {
 
-        if (gamepad1.left_bumper) {
-            driveMovement(1);
         }
-
         else {
-            driveMovement(0.1);
-        }
 
+        }
+    }
+
+    public void driveController() {
+            driveMovement(0.65 );
     }
 
     /**
 
     public void moveSlides(int position, DcMotorSimple.Direction direction, double power) {
         outtakeMotor1.setTargetPosition(position);
-        outtakeMotor1.setTargetPosition(position);
+        outtakeMotor2.setTargetPosition(position);
         outtakeMotor1.setDirection(direction);
-        outtakeMotor1.setDirection(direction);
+        outtakeMotor2.setDirection(direction);
         outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         outtakeMotor1.setPower(power);
-        outtakeMotor1.setPower(power);
+        outtakeMotor2.setPower(power);
     }
 
     public void drop(){
