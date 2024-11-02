@@ -41,9 +41,12 @@ public class   Meet0TeleOp extends LinearOpMode {
 
     public double   speedDrive       = 0.65;
     public double   clawParam        = 0.3;
-    public double   hzParam          = 0.3;
+    public double   hzParam          = 1;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 0.3;
+    double hzServo1;
+    double hzServo2;
+
 
     public void initialize(){
         frontLeftDrive    =    hardwareMap.get(DcMotor.class, "frontLeftDrive");
@@ -70,12 +73,12 @@ public class   Meet0TeleOp extends LinearOpMode {
         frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        /**outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
          outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-         outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);*/
+         outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
@@ -101,17 +104,38 @@ public class   Meet0TeleOp extends LinearOpMode {
             intakeServo.setPower(intakeSpeed);
         }
 
-        else if (gamepad1.left_bumper) {
-            intakeServo.setPower(intakeSpeed);
+        else if (gamepad1.right_bumper) {
+            intakeServo.setPower(-intakeSpeed);
+        }
+        else {
+            intakeServo.setPower(0);
         }
     }
 
+    /**
+
+    public void hzPowerMovement() {
+        if (gamepad1.y) {
+            hzSlidesServo1.setPower(hzParam);
+            hzSlidesServo2.setPower(-hzParam);
+        }
+
+        else if (gamepad1.a) {
+            hzSlidesServo1.setPower(-hzParam);
+            hzSlidesServo2.setPower(hzParam);
+        }
+        else {
+            hzSlidesServo1.setPower(0);
+            hzSlidesServo2.setPower(0);
+        }
+    }
+
+    **/
+
     public void hzMovement() {
-        double hzServo1;
-        double hzServo2;
         if (gamepad1.left_trigger > 0) {
-            hzServo1 = hzfourbarServo1.getPosition();
-            hzServo2 = hzfourbarServo2.getPosition();
+            hzServo1 = hzSlidesServo1.getPosition();
+            hzServo2 = hzSlidesServo2.getPosition();
             hzSlidesServo1.setDirection(Servo.Direction.FORWARD);
             hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
             hzSlidesServo1.setPosition(hzServo1 + hzParam);
@@ -157,51 +181,49 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
-    /**
+
 
      public void moveSlides(int position, DcMotorSimple.Direction direction, double power) {
-     outtakeMotor1.setTargetPosition(position);
-     outtakeMotor2.setTargetPosition(position);
-     outtakeMotor1.setDirection(direction);
-     outtakeMotor2.setDirection(direction);
-     outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-     outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-     outtakeMotor1.setPower(power);
-     outtakeMotor2.setPower(power);
+         outtakeMotor1.setTargetPosition(position);
+         outtakeMotor2.setTargetPosition(position);
+         outtakeMotor1.setDirection(direction);
+         outtakeMotor2.setDirection(direction);
+         outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         outtakeMotor1.setPower(power);
+         outtakeMotor2.setPower(power);
      }
 
      public void drop(){
-     if(Math.abs( (outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2 ) >60) {
-     moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition())-100), DcMotorSimple.Direction.FORWARD, 0.5);
+        if(Math.abs( (outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2 ) >60) {
+            moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition())-100), DcMotorSimple.Direction.FORWARD, 0.5);
      }
 
 
      }
 
      public void reset() {
-     if (Math.abs((outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2) > 50) {
-     moveSlides(50, DcMotorSimple.Direction.FORWARD, 0.95);
+        if (Math.abs((outtakeMotor1.getCurrentPosition() + outtakeMotor2.getCurrentPosition()) / 2) > 50) {
+            moveSlides(50, DcMotorSimple.Direction.FORWARD, 0.95);
 
-     }
+        }
      }
 
      public void stopOuttake(){
-     if(!outtakeMotor1.isBusy() && !outtakeMotor2.isBusy()) {
-     outtakeMotor1.setPower(0.0);
-     outtakeMotor2.setPower(0.0);
-     }
+         if (!outtakeMotor1.isBusy() && !outtakeMotor2.isBusy()) {
+             outtakeMotor1.setPower(0.0);
+             outtakeMotor2.setPower(0.0);
+         }
      }
 
      public void reInitOuttake() {
-     outtakeMotor1.setPower(0.0);
-     outtakeMotor2.setPower(0.0);
-     outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-     outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-     outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-     outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         outtakeMotor1.setPower(0.0);
+         outtakeMotor2.setPower(0.0);
+         outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
      }
-
-     **/
 
     public void run(double verticalPosition, double horizontalPosition, double pivot){
 
@@ -239,9 +261,11 @@ public class   Meet0TeleOp extends LinearOpMode {
 
             //clawClose();
 
-            //spinTake();
+            spinTake();
 
-            hzMovement();
+            //hzMovement();
+
+            //hzPowerMovement();
 
             sleep(50);
 
