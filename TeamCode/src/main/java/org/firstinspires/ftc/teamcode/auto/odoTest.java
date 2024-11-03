@@ -10,8 +10,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "autoBasic")
-public class autoBasic extends LinearOpMode {
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+
+import java.util.Locale;
+
+@Autonomous(name = "odoTest")
+public class odoTest extends LinearOpMode {
+
+    odoPinPointDriver odo;
 
     private DcMotor frontLeftDrive = null;
     private DcMotor frontRightDrive = null;
@@ -39,7 +47,7 @@ public class autoBasic extends LinearOpMode {
     public double intakeSpeed = 0.3;
 
 
-    public void stopRobot () {
+    public void stopRobot() {
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -51,7 +59,7 @@ public class autoBasic extends LinearOpMode {
         backLeftDrive.setPower(0);
     }
 
-    public void vertMove ( double dir, int time) { //inputs for dir is -1 or 1 (forward or backward)
+    public void vertMove(double dir, int time) { //inputs for dir is -1 or 1 (forward or backward)
         frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -62,9 +70,9 @@ public class autoBasic extends LinearOpMode {
         backRightDrive.setPower(driveSpeed * dir);
         backLeftDrive.setPower(driveSpeed * dir);
         sleep(time);
-        }
+    }
 
-    public void horizMove ( double dir, int time){ // -1 for left 1 for positive  for
+    public void horizMove(double dir, int time) { // -1 for left 1 for positive  for
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.FORWARD);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -77,7 +85,7 @@ public class autoBasic extends LinearOpMode {
         sleep(time);
     }
 
-    public void pivot ( double dir, int time){ // -1 for turnLeft 1 for turnRight
+    public void pivot(double dir, int time) { // -1 for turnLeft 1 for turnRight
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE);
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -89,15 +97,15 @@ public class autoBasic extends LinearOpMode {
         backLeftDrive.setPower(driveSpeed * dir);
         sleep(time);
     }
-    public void spinTake(double dir, int time){
+
+    public void spinTake(double dir, int time) {
         intakeServo.setPower(intakeSpeed * dir);
         sleep(time);
     }
 
 
-
     public void runOpMode() {
-
+        odo = hardwareMap.get(odoPinPointDriver.class, "odo");
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "frontRightDrive");
         backLeftDrive = hardwareMap.get(DcMotor.class, "backLeftDrive");
@@ -121,13 +129,7 @@ public class autoBasic extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        vertMove(1, 700);
-        spinTake(-1,300);
 
         stopRobot();
-
     }
-
-
-
 }
