@@ -35,7 +35,8 @@ public class autoBasic extends LinearOpMode {
     public Servo clawRotateServo = null;
     public Servo clawServo = null;
 
-    public double driveSpeed = 0.5;
+    public double driveSpeed = 0.65;
+    public double intakeSpeed = 0.3;
 
 
     public void stopRobot () {
@@ -88,6 +89,12 @@ public class autoBasic extends LinearOpMode {
         backLeftDrive.setPower(driveSpeed * dir);
         sleep(time);
     }
+    public void spinTake(double dir, int time){
+        intakeServo.setPower(intakeSpeed * dir);
+        sleep(time);
+    }
+
+
 
     public void runOpMode() {
 
@@ -114,7 +121,8 @@ public class autoBasic extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        vertMove(1, 800);
+        vertMove(1, 700);
+        spinTake(-1,300);
 
         stopRobot();
 
