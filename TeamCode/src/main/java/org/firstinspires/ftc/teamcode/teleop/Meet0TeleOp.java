@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -35,6 +36,9 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
+    public AnalogInput hzServo1Log   = null;
+    public AnalogInput hzServo2Log   = null;
+
     public double   speedDrive       = 0.65;
     public double   clawParam        = 0.3;
     public double   hzParam          = 0.1;
@@ -63,6 +67,9 @@ public class   Meet0TeleOp extends LinearOpMode {
         vFourbarServo2    =      hardwareMap.get(Servo.class, "vFourbarServo2");
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
+
+        AnalogInput hzServo1Log = hardwareMap.get(AnalogInput.class, "hzServo1Log");
+        AnalogInput hzServo2Log = hardwareMap.get(AnalogInput.class, "hzServo1Log");
 
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
