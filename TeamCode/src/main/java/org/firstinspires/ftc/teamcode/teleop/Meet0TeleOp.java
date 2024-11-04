@@ -2,16 +2,12 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 //import statements
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="MeetZero:Teleop", group="Robot")
 public class   Meet0TeleOp extends LinearOpMode {
@@ -135,72 +131,6 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
-
-
-    public void moveSlides(int position, int position2, DcMotorSimple.Direction direction, double power) {
-        outtakeMotor1.setTargetPosition(position);
-        outtakeMotor2.setTargetPosition(position2);
-        outtakeMotor1.setDirection(direction);
-        outtakeMotor2.setDirection(direction);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        outtakeMotor1.setPower(-power);
-        outtakeMotor2.setPower(power);
-    }
-
-    public void drop() {
-        if (outtakeMotor1.getCurrentPosition() > 60) {
-            moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 100), -(Math.abs(outtakeMotor2.getCurrentPosition()) - 100), DcMotorSimple.Direction.FORWARD, 0.5);
-        }
-        stopOuttake();
-    }
-
-    public void lift(){
-        if(outtakeMotor1.getCurrentPosition() < 8000) {
-            moveSlides(-(Math.abs(outtakeMotor1.getCurrentPosition()) + 400), -(Math.abs(outtakeMotor2.getCurrentPosition()) + 400), DcMotorSimple.Direction.REVERSE, 0.7);
-        }
-        stopOuttake();
-    }
-
-    public void reset() {
-       if (outtakeMotor1.getCurrentPosition() > 50) {
-           moveSlides(50, 50, DcMotorSimple.Direction.FORWARD, 0.95);
-
-       }
-    }
-
-    public void stopOuttake(){
-        if (outtakeMotor1.isBusy() && outtakeMotor2.isBusy()) {
-            outtakeMotor1.setPower(0.0);
-            outtakeMotor2.setPower(0.0);
-        }
-    }
-
-    public void reInitOuttake() {
-        outtakeMotor1.setPower(0.0);
-        outtakeMotor2.setPower(0.0);
-        outtakeMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        outtakeMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        outtakeMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void slideMovement() {
-
-        if (gamepad2.left_trigger > 0){
-            lift();
-        }
-
-        if (gamepad2.left_trigger > 0){
-            drop();
-        }
-
-        if (gamepad1.a){
-            stopOuttake();
-        }
-
-    }
-
     public void hzMovement() {
         hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
         if (gamepad1.right_trigger > 0) {
@@ -263,13 +193,12 @@ public class   Meet0TeleOp extends LinearOpMode {
 
             spinTake();
 
-            hzMovement();
+            //hzMovement();
 
             hzFourBar();
 
-            slideMovement();
-
             //hzPowerMovement();
+
              sleep(50);
 
         }
