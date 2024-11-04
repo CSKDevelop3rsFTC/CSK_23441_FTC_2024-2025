@@ -150,6 +150,24 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
+    public void outTake() {
+        if (gamepad2.left_trigger > 0) {
+            outtakeMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
+            outtakeMotor1.setPower(0.5);
+        }
+
+        else if (gamepad2.right_trigger > 0){
+            outtakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+            outtakeMotor2.setPower(0.5);
+        }
+
+        else if (gamepad2.a) {
+            outtakeMotor1.setPower(0);
+            outtakeMotor2.setPower(0);
+        }
+
+    }
+
     public void hzFourBar() {
         hzFourbarServo2.setDirection(Servo.Direction.REVERSE);
         if (gamepad1.right_bumper) {
