@@ -44,6 +44,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     public double   hzParam          = 0.1;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 1;
+    public double   outtakeSpeed     = 1;
 
     int position2;
 
@@ -95,6 +96,7 @@ public class   Meet0TeleOp extends LinearOpMode {
         backLeftDrive.setPower(((vertical + horizontal)+pivot) * driveSpeed);
     }
 
+
     public void spinTake() {
         if (gamepad1.left_bumper) {
             intakeServo.setPower(intakeSpeed);
@@ -107,6 +109,8 @@ public class   Meet0TeleOp extends LinearOpMode {
             intakeServo.setPower(0);
         }
     }
+
+
 
     public void driveController() {
         if (gamepad1.right_trigger > 0) {
@@ -148,24 +152,6 @@ public class   Meet0TeleOp extends LinearOpMode {
             hzSlidesServo1.setPosition(0.9);
             hzSlidesServo2.setPosition(1);
         }
-    }
-
-    public void outTake() {
-        if (gamepad2.left_trigger > 0) {
-            outtakeMotor1.setDirection(DcMotorSimple.Direction.FORWARD);
-            outtakeMotor1.setPower(0.5);
-        }
-
-        else if (gamepad2.right_trigger > 0){
-            outtakeMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
-            outtakeMotor2.setPower(0.5);
-        }
-
-        else if (gamepad2.a) {
-            outtakeMotor1.setPower(0);
-            outtakeMotor2.setPower(0);
-        }
-
     }
 
     public void hzFourBar() {
