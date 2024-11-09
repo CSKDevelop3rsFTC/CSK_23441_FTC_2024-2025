@@ -102,7 +102,7 @@ public class colorLocator extends LinearOpMode
                     //prototype.vertMove(-1,100);
                 } else if(b.getContourArea() < 3900) {
                     telemetry.addLine("Too far from the robot");
-                    //prototype.vertMove(1,300);
+                    prototype.horizMove(1,200);
 
                 }
 
