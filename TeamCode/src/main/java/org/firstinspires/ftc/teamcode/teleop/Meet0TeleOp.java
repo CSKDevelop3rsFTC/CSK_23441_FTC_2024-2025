@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -36,17 +35,11 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
-    public AnalogInput hzServo1Log   = null;
-    public AnalogInput hzServo2Log   = null;
-
     public double   speedDrive       = 0.65;
     public double   clawParam        = 0.3;
     public double   hzParam          = 0.1;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 1;
-    public double   outtakeSpeed     = 1;
-
-    int position2;
 
 
     public void initialize(){
@@ -68,9 +61,6 @@ public class   Meet0TeleOp extends LinearOpMode {
         vFourbarServo2    =      hardwareMap.get(Servo.class, "vFourbarServo2");
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
-
-        AnalogInput hzServo1Log = hardwareMap.get(AnalogInput.class, "hzServo1Log");
-        AnalogInput hzServo2Log = hardwareMap.get(AnalogInput.class, "hzServo1Log");
 
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -96,7 +86,6 @@ public class   Meet0TeleOp extends LinearOpMode {
         backLeftDrive.setPower(((vertical + horizontal)+pivot) * driveSpeed);
     }
 
-
     public void spinTake() {
         if (gamepad1.left_bumper) {
             intakeServo.setPower(intakeSpeed);
@@ -110,8 +99,6 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
-
-
     public void driveController() {
         if (gamepad1.right_trigger > 0) {
             driveMovement(1);
@@ -123,20 +110,20 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void clawOpen() {
-        double claw1 = clawServo.getPosition();
         if (gamepad2.x) {
-            activeClaw = true;
-            clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(claw1 + clawParam);
+            if (!activeClaw){
+                activeClaw = true;
+                clawServo.setDirection(Servo.Direction.FORWARD);
+                clawServo.setPosition(clawParam);
+            }
         }
     }
 
     public void clawClose() {
-        double claw2 = clawServo.getPosition();
         if (gamepad2.b) {
-            if (!activeClaw) {
-                clawServo.setDirection(Servo.Direction.REVERSE);
-                clawServo.setPosition(claw2 - clawParam);
+            if (activeClaw) {
+                clawServo.setDirection(Servo.Direction.FORWARD);
+                clawServo.setPosition(1 - clawParam);
                 activeClaw = false;
             }
         }
@@ -157,12 +144,12 @@ public class   Meet0TeleOp extends LinearOpMode {
     public void hzFourBar() {
         hzFourbarServo2.setDirection(Servo.Direction.REVERSE);
         if (gamepad1.right_bumper) {
-            hzFourbarServo1.setPosition(0.5);
-            hzFourbarServo2.setPosition(0.5);
+            hzFourbarServo1.setPosition(0.1);
+            hzFourbarServo2.setPosition(0.1);
         }
         if (gamepad1.left_bumper) {
-            hzFourbarServo1.setPosition(1);
-            hzFourbarServo2.setPosition(1);
+            hzFourbarServo1.setPosition(0.2);
+            hzFourbarServo2.setPosition(0.2);
         }
     }
 
@@ -198,18 +185,19 @@ public class   Meet0TeleOp extends LinearOpMode {
 
             driveController();
 
-            //clawOpen();
+            clawOpen();
 
-            //clawClose();
+            clawClose();
 
             spinTake();
 
             //hzMovement();
 
-            hzFourBar();
+            //hzFourBar();
+
+            //slideMovement();
 
             //hzPowerMovement();
-
              sleep(50);
 
         }
