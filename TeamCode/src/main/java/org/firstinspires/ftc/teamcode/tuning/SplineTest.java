@@ -14,14 +14,20 @@ public final class SplineTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 0);
         if (TuningOpModes.DRIVE_CLASS.equals(PinpointDrive.class)) {
-            MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+            PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
 
             waitForStart();
 
             Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        .splineTo(new Vector2d(30, 30), Math.PI / 2)
-                        .splineTo(new Vector2d(0, 60), Math.PI)
+                        //.splineTo(new Vector2d(30, 30), Math.PI / 2)
+                        //.splineTo(new Vector2d(0, 60), Math.PI)
+                        .lineToX(24)
+                        //.lineToY(24)
+                        .lineToX(0)
+                        //.lineToY(0)
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(24,24), Math.PI / 2)
                         .build());
         } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
             TankDrive drive = new TankDrive(hardwareMap, beginPose);
