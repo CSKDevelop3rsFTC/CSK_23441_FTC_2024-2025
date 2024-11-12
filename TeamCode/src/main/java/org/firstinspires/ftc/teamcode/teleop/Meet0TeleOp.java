@@ -129,7 +129,38 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
+
+    public void reset(){
+        if (Math.abs(outtakeMotor1.getCurrentPosition())>50){
+            move(50, DcMotorSimple.Direction.FORWARD,0.95);
+        }
+    }
+
+    private void move(int i, DcMotorSimple.Direction direction, double v) {
+
+
+    }
+
+    public void stopSlides(){
+        if (!outtakeMotor1.isBusy() ) {
+            outtakeMotor1.setPower(0);
+        }
+    }
+
+    public void lift(){
+        if (outtakeMotor1.getCurrentPosition()<8000) {
+            move(outtakeMotor1.getCurrentPosition()+400, DcMotorSimple.Direction.REVERSE,0.7);
+        }
+
+    }
+    public void drop() {
+        if (Math.abs(outtakeMotor1.getCurrentPosition()) > 60) {
+            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 100), DcMotorSimple.Direction.FORWARD, 0.5);
+        }
+    }
+
     public void hzMovement() {
+
         hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
         if (gamepad1.right_trigger > 0) {
             hzSlidesServo2.setPosition(0.4);
