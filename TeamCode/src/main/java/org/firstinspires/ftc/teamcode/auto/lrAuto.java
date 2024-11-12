@@ -53,9 +53,9 @@ public class lrAuto extends LinearOpMode {
 
                         .waitSeconds(3)
 
-                        .setTangent(Math.PI / 2)
-                        .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(0, 0), Math.PI / 2)
+                        //.setTangent(Math.PI / 2)
+                        //.setReversed(true)
+                        //.splineToConstantHeading(new Vector2d(0, 0), Math.PI / 2)
 
                         //.setTangent(Math.PI / 2)
                         //.setReversed(true)

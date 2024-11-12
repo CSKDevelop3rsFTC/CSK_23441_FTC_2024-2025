@@ -136,9 +136,11 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
-    private void move(int i, DcMotorSimple.Direction direction, double v) {
-
-
+    private void move(int position, DcMotorSimple.Direction direction, double power){
+        outtakeMotor1.setTargetPosition(position);
+        outtakeMotor1.setDirection(direction);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor1.setPower(power);
     }
 
     public void stopSlides(){
@@ -156,6 +158,28 @@ public class   Meet0TeleOp extends LinearOpMode {
     public void drop() {
         if (Math.abs(outtakeMotor1.getCurrentPosition()) > 60) {
             move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 100), DcMotorSimple.Direction.FORWARD, 0.5);
+        }
+    }
+
+    public void slideMovement() {
+        if (gamepad2.left_trigger > 0) {
+            drop();
+            System.out.println(outtakeMotor1.getCurrentPosition());
+        }
+
+        else if (gamepad2.right_trigger > 0) {
+            lift();
+            System.out.println(outtakeMotor1.getCurrentPosition());
+
+        }
+        else if (gamepad2.a) {
+            reset();
+            System.out.println(outtakeMotor1.getCurrentPosition());
+
+        }
+
+        else {
+            stopSlides();
         }
     }
 
@@ -221,6 +245,8 @@ public class   Meet0TeleOp extends LinearOpMode {
             clawClose();
 
             spinTake();
+
+            slideMovement();
 
             //hzMovement();
 

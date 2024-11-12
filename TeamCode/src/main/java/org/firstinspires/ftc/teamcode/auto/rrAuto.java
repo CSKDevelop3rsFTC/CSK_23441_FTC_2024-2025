@@ -30,7 +30,7 @@ public class rrAuto extends LinearOpMode {
     @Override
     public void runOpMode() {
         // instantiate your MecanumDrive at a particular pose.
-        Pose2d beginPose = new Pose2d(-64, -11, 0);
+        Pose2d beginPose = new Pose2d(-63, -11, 0);
         PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
 
         waitForStart();
@@ -53,9 +53,9 @@ public class rrAuto extends LinearOpMode {
 
                         .waitSeconds(3)
 
-                        .setTangent(Math.PI / 2)
-                        .setReversed(true)
-                        .splineToConstantHeading(new Vector2d(0, 0), Math.PI / 2)
+                        .strafeTo(new Vector2d(-45, 0))
+
+                        .strafeTo(new Vector2d(-47, 49))
 
                         //.setTangent(Math.PI / 2)
                         //.setReversed(true)
