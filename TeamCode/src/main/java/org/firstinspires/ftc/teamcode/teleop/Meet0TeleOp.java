@@ -130,9 +130,15 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
 
-    public void reset(){
+    public void reset(){ // when clicked A it will set the outatkeMoor 1 to 0
         if (Math.abs(outtakeMotor1.getCurrentPosition())>50){
             move(50, DcMotorSimple.Direction.FORWARD,0.95);
+        }
+    }
+
+    public void reset2(){ // when clicked A it will set the outatkeMOtor 2 to 0
+        if (Math.abs(outtakeMotor2.getCurrentPosition())>50){
+            move(50, DcMotorSimple.Direction.REVERSE,0.95);
         }
     }
 
@@ -142,39 +148,68 @@ public class   Meet0TeleOp extends LinearOpMode {
         outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         outtakeMotor1.setPower(power);
     }
+    private void move2(int position, DcMotorSimple.Direction direction, double power){
+        outtakeMotor2.setTargetPosition(position);
+        outtakeMotor2.setDirection(direction);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor2.setPower(power);
+    }
 
     public void stopSlides(){
         if (!outtakeMotor1.isBusy() ) {
             outtakeMotor1.setPower(0);
         }
     }
+    public void stopSlides2(){
+        if (!outtakeMotor2.isBusy() ) {
+            outtakeMotor2.setPower(0);
+        }
+    }
 
-    public void lift(){
+    public void lift(){  // brings outtake UP when RIGHT trigger held
         if (outtakeMotor1.getCurrentPosition()<8000) {
             move(outtakeMotor1.getCurrentPosition()+400, DcMotorSimple.Direction.REVERSE,0.7);
         }
 
     }
-    public void drop() {
+    public void lift2(){  // brings outtake UP when RIGHT trigger held
+        if (outtakeMotor2.getCurrentPosition()<8000) {
+            move(outtakeMotor2.getCurrentPosition()+400, DcMotorSimple.Direction.FORWARD,0.7);
+        }
+
+    }
+    public void drop() {  // brings outtake DOWN when LEFT trigger held
         if (Math.abs(outtakeMotor1.getCurrentPosition()) > 60) {
             move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 100), DcMotorSimple.Direction.FORWARD, 0.5);
         }
     }
+    public void drop2() {  // brings outtake DOWN when LEFT trigger held
+        if (Math.abs(outtakeMotor2.getCurrentPosition()) > 60) {
+            move(-(Math.abs(outtakeMotor2.getCurrentPosition()) - 100), DcMotorSimple.Direction.REVERSE, 0.5);
+        }
+    }
+
 
     public void slideMovement() {
         if (gamepad2.left_trigger > 0) {
             drop();
+            drop2();
             System.out.println(outtakeMotor1.getCurrentPosition());
+            System.out.println(outtakeMotor2.getCurrentPosition());
         }
 
         else if (gamepad2.right_trigger > 0) {
             lift();
+            lift2();
             System.out.println(outtakeMotor1.getCurrentPosition());
+            System.out.println(outtakeMotor2.getCurrentPosition());
 
         }
         else if (gamepad2.a) {
             reset();
+            reset2();
             System.out.println(outtakeMotor1.getCurrentPosition());
+            System.out.println(outtakeMotor2.getCurrentPosition());
 
         }
 
