@@ -37,25 +37,43 @@ public class lrAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
-                        //.splineTo(new Vector2d(30, 30), Math.PI / 2)
-                        //.splineTo(new Vector2d(0, 60), Math.PI)
-                        //.lineToX(24)
-                        //.lineToX(0)
-                        //.strafeTo(new Vector2d(24, 0))
-                        //.strafeTo(new Vector2d(24, 24))
-                        //.strafeTo(new Vector2d(0, 24))
-                        //.strafeTo(new Vector2d(0, 0))
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(-41,0), Math.PI / 2) // move up to center rungs
+
+                        .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
+
+                        .waitSeconds(2) // replace later with action of placing specimen
+
+                        .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
+
+                        .strafeTo(new Vector2d(-47, 49)) // move to sample one
+
+                        .turnTo(Math.toRadians(-180)) // do a 180 to have intake facing sample
+
+                        .waitSeconds(2) // intake sample
+
+                        .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
+
+                        .turnTo(Math.toRadians(130)) // turn around to the basket
+
+                        .waitSeconds(2) // drop the pixels
+
+                        .strafeTo(new Vector2d(-44.8, 61)) // move to sample position 2
+
+                        .turnTo(Math.toRadians(-180))
+
+                        .waitSeconds(2) // get the sample
+
+                        .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
+
+                        .turnTo(Math.toRadians(130)) // turn around to the basket
+
+                        .waitSeconds(2)
+
+                        .turnTo(Math.toRadians(0))
 
                         .setTangent(0)
-                        .splineToConstantHeading(new Vector2d(-41,0), Math.PI / 2)
-
-                        .strafeTo(new Vector2d(-33, 0))
-
-                        .waitSeconds(3)
-
-                        //.setTangent(Math.PI / 2)
-                        //.setReversed(true)
-                        //.splineToConstantHeading(new Vector2d(0, 0), Math.PI / 2)
+                        .splineToConstantHeading(new Vector2d(-8,-24), Math.PI / 2) // move up to center rungs
 
                         //.setTangent(Math.PI / 2)
                         //.setReversed(true)

@@ -38,6 +38,8 @@ public class   Meet0TeleOp extends LinearOpMode {
     public double   speedDrive       = 0.65;
     public double   clawParam        = 0.3;
     public double   hzParam          = 0.1;
+    public boolean  outPos1          = false;
+    public boolean  outPos2          = false;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 1;
 
@@ -67,6 +69,12 @@ public class   Meet0TeleOp extends LinearOpMode {
         frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
+        hzFourbarServo2.setDirection(Servo.Direction.REVERSE);
+
+        hzSlidesServo1.scaleRange(0.3, 0.9);
+        hzSlidesServo2.scaleRange(0.4, 1);
+
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
     }
@@ -87,11 +95,11 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void spinTake() {
-        if (gamepad1.left_bumper) {
+        if (gamepad1.left_trigger > 0) {
             intakeServo.setPower(intakeSpeed);
         }
 
-        else if (gamepad1.right_bumper) {
+        else if (gamepad1.right_trigger > 0) {
             intakeServo.setPower(-intakeSpeed);
         }
         else {
@@ -100,7 +108,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void driveController() {
-        if (gamepad1.right_trigger > 0) {
+        if (gamepad1.y) {
             driveMovement(1);
         }
 
@@ -157,7 +165,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
     public void drop() {
         if (Math.abs(outtakeMotor1.getCurrentPosition()) > 60) {
-            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 100), DcMotorSimple.Direction.FORWARD, 0.5);
+            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 300), DcMotorSimple.Direction.FORWARD, 0.5);
         }
     }
 
@@ -185,24 +193,30 @@ public class   Meet0TeleOp extends LinearOpMode {
 
     public void hzMovement() {
 
-        hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
-        if (gamepad1.right_trigger > 0) {
+        if (gamepad1.right_bumper && outPos1 == false) {
             hzSlidesServo2.setPosition(0.4);
             hzSlidesServo1.setPosition(0.3);
+            outPos1 = true;
+
         }
-        if (gamepad1.left_trigger > 0) {
-            hzSlidesServo1.setPosition(0.9);
+
+        else if (gamepad1.right_bumper && outPos1 == true) {
+            hzSlidesServo2.setPosition(0.7);
+            hzSlidesServo2.setPosition(0.6);
+            outPos1 = false;
+        }
+
+        if (gamepad1.left_bumper) {
+            hzFourbarServo1.setPosition(0.1);
+            hzFourbarServo2.setPosition(0.1);
+            sleep(50);
             hzSlidesServo2.setPosition(1);
+            hzSlidesServo1.setPosition(0.9);
         }
     }
 
     public void hzFourBar() {
-        hzFourbarServo2.setDirection(Servo.Direction.REVERSE);
-        if (gamepad1.right_bumper) {
-            hzFourbarServo1.setPosition(0.1);
-            hzFourbarServo2.setPosition(0.1);
-        }
-        if (gamepad1.left_bumper) {
+        if (gamepad1.a) {
             hzFourbarServo1.setPosition(0.2);
             hzFourbarServo2.setPosition(0.2);
         }
@@ -248,14 +262,11 @@ public class   Meet0TeleOp extends LinearOpMode {
 
             slideMovement();
 
-            //hzMovement();
+            hzMovement();
 
-            //hzFourBar();
+            hzFourBar();
 
-            //slideMovement();
-
-            //hzPowerMovement();
-             sleep(50);
+            sleep(50);
 
         }
 
