@@ -167,13 +167,13 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void lift(){  // brings outtake UP when RIGHT trigger held
-        if (outtakeMotor1.getCurrentPosition()<8000) {
+        if (outtakeMotor1.getCurrentPosition()<6000) {
             move(outtakeMotor1.getCurrentPosition()+400, DcMotorSimple.Direction.REVERSE,0.7);
         }
 
     }
     public void lift2(){  // brings outtake UP when RIGHT trigger held
-        if (outtakeMotor2.getCurrentPosition()<8000) {
+        if (outtakeMotor2.getCurrentPosition()<6000) {
             move(outtakeMotor2.getCurrentPosition()+400, DcMotorSimple.Direction.FORWARD,0.7);
         }
 
