@@ -73,7 +73,7 @@ public class rrAuto extends LinearOpMode {
                         .turnTo(Math.toRadians(0))
 
                         .setTangent(0)
-                        .splineToConstantHeading(new Vector2d(-8,-24), Math.PI / 2) // move up to center rungs
+                        .splineToConstantHeading(new Vector2d(0,-24), Math.PI / 2) // move up to center rungs
 
                         //.setTangent(Math.PI / 2)
                         //.setReversed(true)
