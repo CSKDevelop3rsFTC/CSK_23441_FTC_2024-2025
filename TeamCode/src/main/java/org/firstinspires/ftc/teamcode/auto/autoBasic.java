@@ -19,8 +19,8 @@ public class autoBasic extends LinearOpMode {
     public DcMotor outtakeMotor2 = null;
 
     //Intake Servos
-    public Servo hzfourbarServo1 = null;
-    public Servo hzfourbarServo2 = null;
+    public Servo hzFourbarServo1 = null;
+    public Servo hzFourbarServo2 = null;
     public Servo hzSlidesServo1 = null;
     public Servo hzSlidesServo2 = null;
     public CRServo intakeServo = null;
@@ -93,17 +93,18 @@ public class autoBasic extends LinearOpMode {
     }
     public void hzFourBar(int pos){
         if(pos == 1){
-            hzfourbarServo1.setPosition(0.95);
-            hzfourbarServo2.setPosition(0.95);
+            hzFourbarServo1.setPosition(0.95);
+            hzFourbarServo2.setPosition(0.95);
         } else {
-            hzfourbarServo1.setPosition(0.1);
-            hzfourbarServo2.setPosition(0.1);
+            hzFourbarServo1.setPosition(0.1);
+            hzFourbarServo2.setPosition(0.1);
             }
     }
     public void intakeSample(){
         hzFourBar(1);
         spinTake(1,300);
         hzFourBar(0);
+        spinTake(-1,100);
     }
 
     public void clawPosition(int pos){ // 0 = close 1 = open
@@ -126,8 +127,8 @@ public class autoBasic extends LinearOpMode {
         outtakeMotor1 = hardwareMap.get(DcMotor.class, "outtakeMotor1");
         outtakeMotor2 = hardwareMap.get(DcMotor.class, "outtakeMotor2");
 
-        hzfourbarServo1 = hardwareMap.get(Servo.class, "hzfourbarServo1");
-        hzfourbarServo2 = hardwareMap.get(Servo.class, "hzfourbarServo2");
+        hzFourbarServo1 = hardwareMap.get(Servo.class, "hzfourbarServo1");
+        hzFourbarServo2 = hardwareMap.get(Servo.class, "hzfourbarServo2");
         hzSlidesServo1 = hardwareMap.get(Servo.class, "hzSlidesServo1");
         hzSlidesServo2 = hardwareMap.get(Servo.class, "hzSlidesServo2");
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
