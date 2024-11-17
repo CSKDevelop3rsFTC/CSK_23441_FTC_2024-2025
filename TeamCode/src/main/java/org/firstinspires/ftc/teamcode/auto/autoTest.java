@@ -154,7 +154,7 @@ public class autoTest extends LinearOpMode {
                 if(pos1 == 0 && pos2 == 0){
                     return true;
                 } else {
-                    return  false;
+                    return false;
                 }
 
             }
@@ -173,7 +173,7 @@ public class autoTest extends LinearOpMode {
                 }
                 double pos1 = auto.vFourbarServo1.getPosition();
                 double pos2 = auto.vFourbarServo2.getPosition();
-                if(pos1 == 0.4 && pos2 == 1){
+                if(pos1 == 0.4 && pos2 == 1 || pos1 == 0.25 && pos2 == 0.5){
                     return true;
                 } else {
                     return  false;
@@ -184,7 +184,28 @@ public class autoTest extends LinearOpMode {
         public Action resetFourBar(){
             return new ResetFourBar();
         }
+        public class HoldFourBar implements Action{
+            autoBasic auto = new autoBasic();
+            private boolean initialized = false;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if(!initialized){
+                    auto.slidesFourBar(2);
+                    initialized = true;
+                }
+                double pos1 = auto.vFourbarServo1.getPosition();
+                double pos2 = auto.vFourbarServo2.getPosition();
+                if(pos1 == 0.4 && pos2 == 1){
+                    return true;
+                } else {
+                    return  false;
+                }
 
+            }
+        }
+        public Action holdFourBar(){
+            return new HoldFourBar();
+        }
 
     }
 
@@ -270,12 +291,19 @@ public class autoTest extends LinearOpMode {
                         intake.intakeSample(),
                         intake.intakeBack(),
                         trajectoryChosen3,
-                        //drop into basket
+                        claw.openClaw(),
+                        outtake.liftFourBar(),
+                        claw.closeClaw(),
+                        outtake.holdFourBar(),
                         trajectoryChosen4,
                         intake.intakeSample(),
                         intake.intakeBack(),
                         trajectoryChosen5,
-                        //drop into basket
+                        outtake.resetFourBar(),
+                        claw.openClaw(),
+                        outtake.liftFourBar(),
+                        claw.closeClaw(),
+                        outtake.holdFourBar(),
                         trajectoryChosen6
 
                 )

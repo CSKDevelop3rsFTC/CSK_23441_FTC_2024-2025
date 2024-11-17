@@ -142,7 +142,7 @@ public class autoBasic extends LinearOpMode {
             move2(outtakeMotor2.getCurrentPosition() + 300, DcMotorSimple.Direction.FORWARD, 1);
         }
     }
-    public void slidesFourBar(int pos){   // pos == 1 == lift
+    public void slidesFourBar(int pos){   // pos == 1 == lift // pos 2 = hold
         ServoImplEx vFourbarServo_1 = (ServoImplEx) hzSlidesServo1;
         ServoImplEx vFourbarServo_2 = (ServoImplEx) hzSlidesServo2;
         if(pos == 0) {
@@ -156,6 +156,12 @@ public class autoBasic extends LinearOpMode {
             vFourbarServo_2.setPwmEnable();
             vFourbarServo_2.setPosition(1);
             vFourbarServo_1.setPosition(0.4);
+        } else if(pos == 2){
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0.5);
+            sleep(100);
+            vFourbarServo1.setPosition(0.25);
         }
 
     }
