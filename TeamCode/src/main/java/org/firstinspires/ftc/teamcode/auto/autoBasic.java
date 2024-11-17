@@ -33,6 +33,8 @@ public class autoBasic extends LinearOpMode {
 
     public double driveSpeed = 0.65;
     public double intakeSpeed = 1;
+    public double clawParam   = 0.3;
+
 
 
     public void stopRobot () {
@@ -102,6 +104,16 @@ public class autoBasic extends LinearOpMode {
         hzFourBar(1);
         spinTake(1,300);
         hzFourBar(0);
+    }
+
+    public void clawPosition(int pos){ // 0 = close 1 = open
+        if(pos == 1) {
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(clawParam);
+        } else if(pos == 0) {
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(1 - clawParam);
+        }
     }
 
     public void runOpMode() {
