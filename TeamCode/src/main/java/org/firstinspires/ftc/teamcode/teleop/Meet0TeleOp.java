@@ -43,7 +43,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     public boolean  outPos2          = false;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = 1;
-    public boolean  clickBlockL      = false;
+    public boolean  spinT            = false;
     public boolean  clickBlockR      = false;
 
     Gamepad currentGamepad1 = new Gamepad();
@@ -79,6 +79,8 @@ public class   Meet0TeleOp extends LinearOpMode {
         hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
         hzFourbarServo1.setDirection(Servo.Direction.REVERSE);
 
+        vFourbarServo1.setDirection(Servo.Direction.FORWARD);
+
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
     }
@@ -112,8 +114,13 @@ public class   Meet0TeleOp extends LinearOpMode {
         else if (gamepad1.right_trigger > 0) {
             intakeServo.setPower(-intakeSpeed);
         }
+
         else {
             intakeServo.setPower(0);
+        }
+
+        if (spinT) {
+            intakeServo.setPower(-intakeSpeed);
         }
     }
 
@@ -148,15 +155,19 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
 
-    public void reset(){ // when clicked A it will set the outatkeMoor 1 to 0
-        if (Math.abs(outtakeMotor1.getCurrentPosition())>50){
-            move(50, DcMotorSimple.Direction.FORWARD,0.95);
+    public void reset(){ // when clicked A it will set the outtakeMotor 1 to 0
+        if (Math.abs(outtakeMotor1.getCurrentPosition())>50) {
+            move(50, DcMotorSimple.Direction.REVERSE, 0.95);
         }
+        vFourbarServo1.setPosition(0);
+        sleep(1000);
+        vFourbarServo1.setPosition(0.5);
+        //vFourbarServo2.setPosition(0.7);
     }
 
-    public void reset2(){ // when clicked A it will set the outatkeMOtor 2 to 0
+    public void reset2(){ // when clicked A it will set the outtakeMotor 2 to 0
         if (Math.abs(outtakeMotor2.getCurrentPosition())>50){
-            move(50, DcMotorSimple.Direction.REVERSE,0.95);
+            move2(50, DcMotorSimple.Direction.FORWARD,0.95);
         }
     }
 
@@ -174,7 +185,7 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void stopSlides(){
-        if (!outtakeMotor1.isBusy() ) {
+        if (!outtakeMotor1.isBusy()) {
             outtakeMotor1.setPower(0);
         }
     }
@@ -186,24 +197,24 @@ public class   Meet0TeleOp extends LinearOpMode {
 
     public void lift(){  // brings outtake UP when RIGHT trigger held
         if (outtakeMotor1.getCurrentPosition()<6000) {
-            move(outtakeMotor1.getCurrentPosition()+400, DcMotorSimple.Direction.REVERSE,0.7);
+            move(outtakeMotor1.getCurrentPosition()+300, DcMotorSimple.Direction.REVERSE,0.7);
         }
 
     }
     public void lift2(){  // brings outtake UP when RIGHT trigger held
         if (outtakeMotor2.getCurrentPosition()<6000) {
-            move(outtakeMotor2.getCurrentPosition()+400, DcMotorSimple.Direction.FORWARD,0.7);
+            move2(outtakeMotor2.getCurrentPosition()+300, DcMotorSimple.Direction.FORWARD,0.7);
         }
 
     }
     public void drop() {  // brings outtake DOWN when LEFT trigger held
-        if (Math.abs(outtakeMotor1.getCurrentPosition()) > 60) {
-            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 300), DcMotorSimple.Direction.FORWARD, 0.5);
+        if (Math.abs(outtakeMotor1.getCurrentPosition()) > 80) {
+            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 300), DcMotorSimple.Direction.REVERSE, 0.5);
         }
     }
     public void drop2() {  // brings outtake DOWN when LEFT trigger held
-        if (Math.abs(outtakeMotor2.getCurrentPosition()) > 60) {
-            move(-(Math.abs(outtakeMotor2.getCurrentPosition()) - 100), DcMotorSimple.Direction.REVERSE, 0.5);
+        if (Math.abs(outtakeMotor2.getCurrentPosition()) > 80) {
+            move2(-(Math.abs(outtakeMotor2.getCurrentPosition()) - 300), DcMotorSimple.Direction.FORWARD, 0.5);
         }
     }
 
@@ -212,22 +223,16 @@ public class   Meet0TeleOp extends LinearOpMode {
         if (gamepad2.left_trigger > 0) {
             drop();
             drop2();
-            System.out.println(outtakeMotor1.getCurrentPosition());
-            System.out.println(outtakeMotor2.getCurrentPosition());
         }
 
         else if (gamepad2.right_trigger > 0) {
             lift();
             lift2();
-            System.out.println(outtakeMotor1.getCurrentPosition());
-            System.out.println(outtakeMotor2.getCurrentPosition());
 
         }
         else if (gamepad2.a) {
             reset();
             reset2();
-            System.out.println(outtakeMotor1.getCurrentPosition());
-            System.out.println(outtakeMotor2.getCurrentPosition());
 
         }
 
@@ -242,7 +247,7 @@ public class   Meet0TeleOp extends LinearOpMode {
         if ((!currentGamepad1.right_bumper && previousGamePad1.right_bumper) && outPos1 == false) {
             hzSlidesServo2.setPosition(0.7);
             hzSlidesServo1.setPosition(0.6);
-            sleep(2000);
+            sleep(500);
             outPos1 = true;
         }
 
@@ -253,22 +258,22 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
 
         if (gamepad1.left_bumper) {
-            intakeServo.setPower(-1);
+            spinT = true;
             hzFourbarServo1.setPosition(0.1);
             hzFourbarServo2.setPosition(0.1);
             sleep(50);
             hzSlidesServo2.setPosition(1);
             hzSlidesServo1.setPosition(0.9);
-            sleep(500);
-            intakeServo.setPower(0);
+            sleep(1000);
             outPos1 = false;
+            spinT = false;
         }
     }
 
     public void hzFourBar() {
         if (gamepad1.a) {
-            hzFourbarServo1.setPosition(0.55);
-            hzFourbarServo2.setPosition(0.55);
+            hzFourbarServo1.setPosition(0.95);
+            hzFourbarServo2.setPosition(0.95);
         }
     }
 
@@ -308,6 +313,8 @@ public class   Meet0TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             reGamepad();
+
+            System.out.println("motor1:" + outtakeMotor1.getCurrentPosition() + "motor2:" + outtakeMotor2.getCurrentPosition());
 
             driveController();
 
