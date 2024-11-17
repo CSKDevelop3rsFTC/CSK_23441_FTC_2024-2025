@@ -86,6 +86,108 @@ public class Intake{
         return new IntakeBack();
     }
 }
+    public class Outtake {
+        public class LiftSlides implements Action{
+            autoBasic auto = new autoBasic();
+            private boolean initialized = false;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if(!initialized){
+                    auto.move(auto.outtakeMotor1.getCurrentPosition()+300, DcMotorSimple.Direction.REVERSE,1);
+                    auto.move2(auto.outtakeMotor2.getCurrentPosition() + 300, DcMotorSimple.Direction.FORWARD, 1);
+                    initialized = true;
+                }
+                double pos1 = auto.outtakeMotor1.getCurrentPosition();
+                double pos2 = auto.outtakeMotor2.getCurrentPosition();
+                if(pos1 < 6000 && pos2 < 6000){
+                    return true;
+                } else {
+                    auto.outtakeMotor1.setPower(0);
+                    auto.outtakeMotor2.setPower(0);
+                    return false;
+                }
+
+
+            }
+        }
+        public Action liftSlides(){
+            return new LiftSlides();
+        }
+        public class ResetSlides implements Action{
+            autoBasic auto = new autoBasic();
+            private boolean initialized = false;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if(!initialized){
+                    auto.move(50, DcMotorSimple.Direction.REVERSE, 0.95);
+                    auto.move2(50, DcMotorSimple.Direction.FORWARD,0.95);
+                    initialized = true;
+                }
+                double pos1 = auto.outtakeMotor1.getCurrentPosition();
+                double pos2 = auto.outtakeMotor2.getCurrentPosition();
+                if(pos1 > 60 && pos2 > 60){
+                    return true;
+                } else {
+                    auto.outtakeMotor1.setPower(0);
+                    auto.outtakeMotor2.setPower(0);
+                    return false;
+                }
+
+
+            }
+        }
+        public Action resetSlides(){
+            return new ResetSlides();
+        }
+
+        public class LiftFourBar implements Action{
+            autoBasic auto = new autoBasic();
+            private boolean initialized = false;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if(!initialized){
+                    auto.slidesFourBar(1);
+                    initialized = true;
+                }
+                double pos1 = auto.vFourbarServo1.getPosition();
+                double pos2 = auto.vFourbarServo2.getPosition();
+                if(pos1 == 0 && pos2 == 0){
+                    return true;
+                } else {
+                    return  false;
+                }
+
+            }
+        }
+        public Action liftFourBar(){
+            return new LiftFourBar();
+        }
+        public class ResetFourBar implements Action{
+            autoBasic auto = new autoBasic();
+            private boolean initialized = false;
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                if(!initialized){
+                    auto.slidesFourBar(0);
+                    initialized = true;
+                }
+                double pos1 = auto.vFourbarServo1.getPosition();
+                double pos2 = auto.vFourbarServo2.getPosition();
+                if(pos1 == 0.4 && pos2 == 1){
+                    return true;
+                } else {
+                    return  false;
+                }
+
+            }
+        }
+        public Action resetFourBar(){
+            return new ResetFourBar();
+        }
+
+
+    }
+
     public class Claw {
         public class OpenClaw implements Action {
             autoBasic auto = new autoBasic();
@@ -115,9 +217,11 @@ public class Intake{
     }
 
 
+
     public void runOpMode() {
         Intake intake = new Intake();
         Claw claw = new Claw();
+        Outtake outtake = new Outtake();
         autoBasic auto = new autoBasic();
 
         // instantiate your MecanumDrive at a particular pose.
