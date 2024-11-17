@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -29,28 +30,23 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Autonomous(name = "autoTest", group = "Autonomous")
 public class autoTest extends LinearOpMode {
 
-    public void intakething(){
-        autoBasic auto = new autoBasic();
-        auto.hzFourBar(1);
-        auto.spinTake(1,300);
-        auto.hzFourBar(0);
-    }
+
 
 
 public class Intake{
     public class IntakeSample implements Action {
-        private boolean initialized = false;
         autoBasic auto = new autoBasic();
-
+        private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if (!initialized) {
                 auto.hzFourBar(1);
                 auto.spinTake(1, 300);
+                initialized = true;
             }
 
-            double pos1 = auto.hzfourbarServo1.getPosition();
-            double pos2 = auto.hzfourbarServo2.getPosition();
+            double pos1 = auto.hzFourbarServo1.getPosition();
+            double pos2 = auto.hzFourbarServo2.getPosition();
             if (pos1 == 0 && pos2 == 0) {
                 return true;
             } else {
@@ -65,22 +61,22 @@ public class Intake{
     }
 
     public class IntakeBack implements Action {
-        private boolean initialized = false;
         autoBasic auto = new autoBasic();
-
+        private boolean initialized = false;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             if (!initialized) {
                 auto.hzFourBar(0);
                 auto.intakeServo.setPower(0);
+                initialized = true;
             }
 
-            double pos1 = auto.hzfourbarServo1.getPosition();
-            double pos2 = auto.hzfourbarServo2.getPosition();
+            double pos1 = auto.hzFourbarServo1.getPosition();
+            double pos2 = auto.hzFourbarServo2.getPosition();
             if (pos1 == 0.95 && pos2 == 0.95) {
                 return true;
             } else {
-                auto.spinTake(1, 300);
+                auto.spinTake(-1, 200);
                 return false;
             }
         }
@@ -135,19 +131,48 @@ public class Intake{
                         .splineToConstantHeading(new Vector2d(-41,0), Math.PI / 2) // move up to center rungs
                         .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
                         .waitSeconds(3);
+        TrajectoryActionBuilder tab2 = drive.actionBuilder(new Pose2d(-33, 0, Math.PI/2))
+                        .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
+                        .strafeTo(new Vector2d(-47, 49)) // move to sample one
+                        .turnTo(Math.toRadians(-180));
+        TrajectoryActionBuilder tab3 = drive.actionBuilder(new Pose2d(-47, 49, Math.toRadians(-180)))
+                        .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
+                        .turnTo(Math.toRadians(130)); // turn around to the basket
+        TrajectoryActionBuilder tab4 = drive.actionBuilder(new Pose2d(-56.9, 57, Math.toRadians(130)))
+                        .strafeTo(new Vector2d(-44.8, 61)) // move to sample position 2
+                        .turnTo(Math.toRadians(-180));
+        TrajectoryActionBuilder tab5 = drive.actionBuilder(new Pose2d(-44.8, 61, Math.toRadians(-180)))
+                        .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
+                        .turnTo(Math.toRadians(130)); // turn around to the basket
+        TrajectoryActionBuilder tab6 = drive.actionBuilder(new Pose2d(-56.9, 57, Math.toRadians(130)))
+                        .turnTo(Math.toRadians(0))
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(0,-24), Math.PI / 2); // move up to center rungs
         Action trajectoryActionCloseOut = tab1.fresh()
                         .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
                         .build();
-
         Action trajectoryActionChosen;
         trajectoryActionChosen = tab1.build();
-        //Action trajectoryActionChosen2 = tab2.build();
+        Action trajectoryChosen2 = tab2.build();
+        Action trajectoryChosen3 = tab3.build();
+        Action trajectoryChosen4 = tab4.build();
+        Action trajectoryChosen5 = tab5.build();
+        Action trajectoryChosen6 = tab6.build();
+
         Actions.runBlocking(
                             new SequentialAction(
                                     trajectoryActionChosen,
+                                    trajectoryChosen2,
                                     intake.intakeSample(),
                                     intake.intakeBack(),
-                                    trajectoryActionCloseOut
+                                    trajectoryChosen3,
+                                    //drop into basket
+                                    trajectoryChosen4,
+                                    intake.intakeSample(),
+                                    intake.intakeBack(),
+                                    trajectoryChosen5,
+                                    //drop into basket
+                                    trajectoryChosen6
 
                             )
                     );
