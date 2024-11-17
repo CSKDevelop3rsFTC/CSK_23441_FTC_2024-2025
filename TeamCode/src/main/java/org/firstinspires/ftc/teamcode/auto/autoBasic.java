@@ -1,13 +1,9 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous(name = "autoBasic")
@@ -36,7 +32,7 @@ public class autoBasic extends LinearOpMode {
     public Servo clawServo = null;
 
     public double driveSpeed = 0.65;
-    public double intakeSpeed = 0.3;
+    public double intakeSpeed = 1;
 
 
     public void stopRobot () {
@@ -93,8 +89,20 @@ public class autoBasic extends LinearOpMode {
         intakeServo.setPower(intakeSpeed * dir);
         sleep(time);
     }
-
-
+    public void hzFourBar(int pos){
+        if(pos == 1){
+            hzfourbarServo1.setPosition(0.95);
+            hzfourbarServo2.setPosition(0.95);
+        } else {
+            hzfourbarServo1.setPosition(0.1);
+            hzfourbarServo2.setPosition(0.1);
+            }
+    }
+    public void intakeSample(){
+        hzFourBar(1);
+        spinTake(1,300);
+        hzFourBar(0);
+    }
 
     public void runOpMode() {
 
@@ -121,8 +129,7 @@ public class autoBasic extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        vertMove(1, 700);
-        spinTake(-1,300);
+        intakeSample();
 
         stopRobot();
 
