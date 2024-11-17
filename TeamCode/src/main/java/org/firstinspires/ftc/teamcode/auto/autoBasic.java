@@ -35,6 +35,8 @@ public class autoBasic extends LinearOpMode {
 
     public double driveSpeed = 0.65;
     public double intakeSpeed = 1;
+    public double clawParam   = 0.3;
+
 
 
     public void stopRobot () {
@@ -60,7 +62,7 @@ public class autoBasic extends LinearOpMode {
         backRightDrive.setPower(driveSpeed * dir);
         backLeftDrive.setPower(driveSpeed * dir);
         sleep(time);
-        }
+    }
 
     public void horizMove ( double dir, int time){ // -1 for left 1 for positive  for
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -98,12 +100,23 @@ public class autoBasic extends LinearOpMode {
         } else {
             hzFourbarServo1.setPosition(0.1);
             hzFourbarServo2.setPosition(0.1);
-            }
+        }
     }
     public void intakeSample(){
         hzFourBar(1);
         spinTake(1,300);
         hzFourBar(0);
+        spinTake(-1,100);
+    }
+
+    public void clawPosition(int pos){ // 0 = close 1 = open
+        if(pos == 1) {
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(clawParam);
+        } else if(pos == 0) {
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(1 - clawParam);
+        }
     }
     public void move(int position, DcMotorSimple.Direction direction, double power){
         outtakeMotor1.setTargetPosition(position);
