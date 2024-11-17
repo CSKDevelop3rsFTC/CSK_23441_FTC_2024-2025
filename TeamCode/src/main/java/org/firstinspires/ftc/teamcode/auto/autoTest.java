@@ -86,7 +86,7 @@ public class Intake{
         return new IntakeBack();
     }
 }
-    public class Claw {
+   /* public class Claw {
         public class OpenClaw implements Action {
             autoBasic auto = new autoBasic();
 
@@ -113,11 +113,11 @@ public class Intake{
             return new CloseClaw();
         }
     }
-
+*/
 
     public void runOpMode() {
         Intake intake = new Intake();
-        Claw claw = new Claw();
+        //Claw claw = new Claw();
         autoBasic auto = new autoBasic();
 
         // instantiate your MecanumDrive at a particular pose.
@@ -161,18 +161,18 @@ public class Intake{
 
         Actions.runBlocking(
                             new SequentialAction(
-                                    trajectoryActionChosen,
-                                    trajectoryChosen2,
+                                //    trajectoryActionChosen,
+                                  //  trajectoryChosen2,
                                     intake.intakeSample(),
-                                    intake.intakeBack(),
-                                    trajectoryChosen3,
+                                    intake.intakeBack()
+                                    //trajectoryChosen3,
                                     //drop into basket
-                                    trajectoryChosen4,
+                               /*     trajectoryChosen4,
                                     intake.intakeSample(),
                                     intake.intakeBack(),
                                     trajectoryChosen5,
                                     //drop into basket
-                                    trajectoryChosen6
+                                    trajectoryChosen6 */
 
                             )
                     );
