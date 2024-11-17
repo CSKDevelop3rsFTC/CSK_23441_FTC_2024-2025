@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @Autonomous(name = "autoBasic")
 public class autoBasic extends LinearOpMode {
@@ -103,7 +105,47 @@ public class autoBasic extends LinearOpMode {
         spinTake(1,300);
         hzFourBar(0);
     }
+    public void move(int position, DcMotorSimple.Direction direction, double power){
+        outtakeMotor1.setTargetPosition(position);
+        outtakeMotor1.setDirection(direction);
+        outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor1.setPower(power);
+    }
+    public void move2(int position, DcMotorSimple.Direction direction, double power){
+        outtakeMotor2.setTargetPosition(position);
+        outtakeMotor2.setDirection(direction);
+        outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        outtakeMotor2.setPower(power);
+    }
 
+    public void lift(){  // brings outtake UP
+        if (outtakeMotor1.getCurrentPosition()<6000) {
+            move(outtakeMotor1.getCurrentPosition()+300, DcMotorSimple.Direction.REVERSE,1);
+        }
+
+    }
+    public void lift2() {  // brings outtake UP
+        if (outtakeMotor2.getCurrentPosition() < 6000) {
+            move2(outtakeMotor2.getCurrentPosition() + 300, DcMotorSimple.Direction.FORWARD, 1);
+        }
+    }
+    public void slidesFourBar(int pos){   // pos == 1 == lift
+        ServoImplEx vFourbarServo_1 = (ServoImplEx) hzSlidesServo1;
+        ServoImplEx vFourbarServo_2 = (ServoImplEx) hzSlidesServo2;
+        if(pos == 0) {
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo_1.setPosition(0);
+            sleep(350);
+            vFourbarServo_2.setPosition(0);
+        } else if(pos == 1) {
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo_2.setPosition(1);
+            vFourbarServo_1.setPosition(0.4);
+        }
+
+    }
     public void runOpMode() {
 
         frontLeftDrive = hardwareMap.get(DcMotor.class, "frontLeftDrive");
