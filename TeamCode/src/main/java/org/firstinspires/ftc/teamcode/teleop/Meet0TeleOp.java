@@ -80,6 +80,8 @@ public class   Meet0TeleOp extends LinearOpMode {
         vFourbarServo1.setDirection(Servo.Direction.FORWARD);
         vFourbarServo2.setDirection(Servo.Direction.REVERSE);
 
+        activeClaw = false;
+
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
     }
@@ -89,7 +91,7 @@ public class   Meet0TeleOp extends LinearOpMode {
         double horizontal;
         double pivot;
 
-        horizontal =    gamepad1.left_stick_x;
+        horizontal =    gamepad1.left_stick_x ;
         vertical   =   -gamepad1.left_stick_y;
         pivot      =   -gamepad1.right_stick_x;
 
@@ -115,7 +117,7 @@ public class   Meet0TeleOp extends LinearOpMode {
 
     public void contSpin(boolean spinT) {
         if (spinT) {
-            intakeServo.setPower(-intakeSpeed);
+            intakeServo.setPower(intakeSpeed);
         }
         else if (!spinT) {
             intakeServo.setPower(0);
@@ -132,21 +134,25 @@ public class   Meet0TeleOp extends LinearOpMode {
         }
     }
 
-    public void clawOpen() {
+    public void clawClose() {
+        ServoImplEx clawServ = (ServoImplEx) clawServo;
+        clawServ.setPwmEnable();
         if (gamepad2.x) {
             if (activeClaw){
                 activeClaw = false;
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.8 - clawParam);
+                clawServo.setPosition(0.8);
             }
         }
     }
 
-    public void clawClose() {
+    public void clawOpen() {
+        ServoImplEx clawServ = (ServoImplEx) clawServo;
+        clawServ.setPwmEnable();
         if (gamepad2.b) {
             if (!activeClaw) {
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(clawParam);
+                clawServo.setPosition(0.3);
                 activeClaw = true;
             }
         }
@@ -154,8 +160,8 @@ public class   Meet0TeleOp extends LinearOpMode {
 
 
     public void reset(){ // when clicked A it will set the outtakeMotor 1 to 0
-        if (Math.abs(outtakeMotor1.getCurrentPosition())>60) {
-            move(50, DcMotorSimple.Direction.REVERSE, 0.95);
+        if (Math.abs(outtakeMotor1.getCurrentPosition())>50) {
+            move(50, DcMotorSimple.Direction.REVERSE, 0.90);
         }
         //vFourbarServo1.setPosition(0);
         //sleep(1000);
@@ -164,8 +170,8 @@ public class   Meet0TeleOp extends LinearOpMode {
     }
 
     public void reset2(){ // when clicked A it will set the outtakeMotor 2 to 0
-        if (Math.abs(outtakeMotor2.getCurrentPosition())>60){
-            move2(50, DcMotorSimple.Direction.FORWARD,0.95);
+        if (Math.abs(outtakeMotor2.getCurrentPosition())>50){
+            move2(50, DcMotorSimple.Direction.FORWARD,0.90);
         }
     }
 
@@ -258,16 +264,22 @@ public class   Meet0TeleOp extends LinearOpMode {
         else if (vPos == "ready") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(1);
             vFourbarServo1.setPosition(0.4);
+            sleep(500);
+            vFourbarServo2.setPosition(0.7);
         }
 
         else if (vPos == "hold") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.5);
+            vFourbarServo2.setPosition(0);
             sleep(100);
-            vFourbarServo1.setPosition(0.25);
+            vFourbarServo1.setPosition(0.15);
+        }
+
+        else if (vPos == "drop") {
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0.9);
         }
 
 
@@ -281,6 +293,11 @@ public class   Meet0TeleOp extends LinearOpMode {
         else if (gamepad2.right_bumper) {
             vSlides("ready");
         }
+
+        else if (gamepad2.left_bumper) {
+            vSlides("drop");
+        }
+
     }
 
     public void hzMovement() {
@@ -312,12 +329,12 @@ public class   Meet0TeleOp extends LinearOpMode {
             contSpin(true);
             hzSlidesServo_1.setPwmEnable();
             hzSlidesServo_2.setPwmEnable();
-            hzFourbarServo1.setPosition(0.05);
-            hzFourbarServo2.setPosition(0.05);
+            hzFourbarServo1.setPosition(0.10);
+            hzFourbarServo2.setPosition(0.10);
             sleep(50);
-            hzSlidesServo2.setPosition(1);
-            hzSlidesServo1.setPosition(0.9);
-            sleep(500);
+            hzSlidesServo2.setPosition(0.97);
+            hzSlidesServo1.setPosition(0.87);
+            sleep(750);
             contSpin(false);
             outPos1 = false;
         }

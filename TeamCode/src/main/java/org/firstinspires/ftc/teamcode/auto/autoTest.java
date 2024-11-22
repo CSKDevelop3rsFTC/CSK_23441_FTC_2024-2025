@@ -286,11 +286,11 @@ public class autoTest extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        trajectoryActionChosen,
-                        trajectoryChosen2,
+                        //trajectoryActionChosen,
+                        //trajectoryChosen2,
                         intake.intakeSample(),
-                        intake.intakeBack(),
-                        trajectoryChosen3,
+                        intake.intakeBack()
+                        /**trajectoryChosen3,
                         claw.openClaw(),
                         outtake.liftFourBar(),
                         claw.closeClaw(),
@@ -304,7 +304,7 @@ public class autoTest extends LinearOpMode {
                         outtake.liftFourBar(),
                         claw.closeClaw(),
                         outtake.holdFourBar(),
-                        trajectoryChosen6
+                        trajectoryChosen6**/
 
                 )
         );

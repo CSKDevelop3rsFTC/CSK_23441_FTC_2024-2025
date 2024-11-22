@@ -18,8 +18,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.PinpointDrive;
@@ -37,8 +39,13 @@ public class rrAuto extends LinearOpMode {
 
         Actions.runBlocking(
                 drive.actionBuilder(beginPose)
+
                         .setTangent(0)
-                        .splineToConstantHeading(new Vector2d(-41,0), Math.PI / 2) // move up to center rungs
+                        .strafeToConstantHeading(new Vector2d(-60,-57))
+
+                        /**
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(-41,0), Math.PI * 2) // move up to center rungs
 
                         .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
 
@@ -78,6 +85,8 @@ public class rrAuto extends LinearOpMode {
                         //.setTangent(Math.PI / 2)
                         //.setReversed(true)
                         //.splineToConstantHeading(new Vector2d(0, 0), Math.PI / 2)
+
+                        **/
 
                         .build());
 

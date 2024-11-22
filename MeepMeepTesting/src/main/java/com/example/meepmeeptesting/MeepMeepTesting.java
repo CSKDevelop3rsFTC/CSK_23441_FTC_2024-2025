@@ -16,7 +16,7 @@ public class MeepMeepTesting {
                 .build();
 
         myBot.runAction(myBot.getDrive().actionBuilder(new Pose2d(-64, -11, 0))
-
+/**
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-41,0), Math.PI / 2) // move up to center rungs
 
@@ -47,6 +47,14 @@ public class MeepMeepTesting {
                 .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
 
                 .turnTo(Math.toRadians(30)) // turn around to the basket
+**/
+                .setTangent(0)
+                .strafeToConstantHeading(new Vector2d(-62,52))
+                .turnTo(Math.toRadians(130))// move up to center rungs
+
+                .strafeTo(new Vector2d(-12, 33)) // move to sample one
+
+                .turnTo(Math.toRadians(30))
 
                 .build());
 
