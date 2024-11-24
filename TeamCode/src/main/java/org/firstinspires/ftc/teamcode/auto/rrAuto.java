@@ -41,6 +41,7 @@ public class rrAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 clawServo.setPosition(0.8);
+                sleep(1000);
                 return false;
             }
         }
@@ -52,6 +53,7 @@ public class rrAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 clawServo.setPosition(0.3);
+                sleep(1000);
                 return false;
             }
         }
