@@ -29,54 +29,19 @@ import org.firstinspires.ftc.teamcode.PinpointDrive;
 @Autonomous(name = "rrAuto", group = "Autonomous")
 public class rrAuto extends LinearOpMode {
 
-    public class claw {
-        private Servo clawServo;
-
-        public claw(HardwareMap hardwareMap) {
-            clawServo = hardwareMap.get(Servo.class, "clawServo");
-            clawServo.setDirection(Servo.Direction.FORWARD);
-        }
-
-        public class CloseClaw implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                clawServo.setPosition(0.8);
-                return false;
-            }
-        }
-        public Action closeClaw() {
-            return new CloseClaw();
-        }
-
-        public class OpenClaw implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket packet) {
-                clawServo.setPosition(0.3);
-                return false;
-            }
-        }
-        public Action openClaw() {
-            return new OpenClaw();
-        }
-
-    }
-
     @Override
     public void runOpMode() {
         // instantiate your MecanumDrive at a particular pose.
         Pose2d beginPose = new Pose2d(-63, -11, 0);
         PinpointDrive drive = new PinpointDrive(hardwareMap, beginPose);
-        claw clawServo = new claw(hardwareMap);
 
         waitForStart();
 
         Actions.runBlocking(
-                new SequentialAction(
+                drive.actionBuilder(beginPose)
 
-                        //.setTangent(0)
-                        //.strafeToConstantHeading(new Vector2d(-60,-57))
-                        clawServo.openClaw(),
-                        clawServo.closeClaw()
+                        .setTangent(0)
+                        .strafeToConstantHeading(new Vector2d(-60,-57))
 
                         /**
                         .setTangent(0)
@@ -123,8 +88,7 @@ public class rrAuto extends LinearOpMode {
 
                         **/
 
-                )
-        );
+                        .build());
 
     }
 
