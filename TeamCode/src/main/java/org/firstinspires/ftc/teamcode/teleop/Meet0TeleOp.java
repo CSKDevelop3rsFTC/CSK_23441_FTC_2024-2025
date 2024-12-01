@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -13,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 @TeleOp(name="MeetZero:Teleop", group="Robot")
-public class   Meet0TeleOp extends LinearOpMode {
+public class Meet0TeleOp extends LinearOpMode {
 
     //Drive Train Motors
     public DcMotor  frontLeftDrive   = null;
@@ -38,11 +39,17 @@ public class   Meet0TeleOp extends LinearOpMode {
     public Servo    clawRotateServo  = null;
     public Servo    clawServo        = null;
 
+    public ColorSensor cSense        = null;
+
     public double   speedDrive       = 0.65;
     public double   clawParam        = 0;
     public boolean  outPos1          = false;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = -1;
+
+    public int redVal = 0;
+    public int greenVal = 0;
+    public int blueVal = 0;
 
     Gamepad currentGamepad1 = new Gamepad();
 
@@ -69,6 +76,8 @@ public class   Meet0TeleOp extends LinearOpMode {
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
 
+        cSense            =        hardwareMap.get(ColorSensor.class, "cSense");
+
         frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -79,6 +88,8 @@ public class   Meet0TeleOp extends LinearOpMode {
 
         vFourbarServo1.setDirection(Servo.Direction.FORWARD);
         vFourbarServo2.setDirection(Servo.Direction.REVERSE);
+
+        cSense.enableLed(true);
 
         activeClaw = false;
 
@@ -285,6 +296,37 @@ public class   Meet0TeleOp extends LinearOpMode {
 
     }
 
+    public void colorSense() {
+        sleep(300);
+
+        greenVal = cSense.green();
+        redVal = cSense.red();
+        blueVal = cSense.blue();
+
+        System.out.println("R : " + redVal);
+        System.out.println("G : " + greenVal);
+        System.out.println("B : " + blueVal);
+
+        if (redVal > blueVal && redVal > greenVal) {
+            vSlides("zero");
+            sleep(250);
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(0.3);
+            activeClaw = true;
+        }
+        else if (blueVal > redVal && blueVal > greenVal) {
+            System.out.println("val");
+        }
+        else if (redVal > blueVal && greenVal > blueVal) {
+            vSlides("zero");
+            sleep(250);
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(0.3);
+            activeClaw = true;
+        }
+
+    }
+
     public void slidesFourBar() {
 
         if (gamepad2.y) {
@@ -297,6 +339,7 @@ public class   Meet0TeleOp extends LinearOpMode {
         else if (gamepad2.left_bumper) {
             vSlides("drop");
         }
+
 
     }
 
@@ -337,6 +380,7 @@ public class   Meet0TeleOp extends LinearOpMode {
             sleep(750);
             contSpin(false);
             outPos1 = false;
+            colorSense();
         }
     }
 
