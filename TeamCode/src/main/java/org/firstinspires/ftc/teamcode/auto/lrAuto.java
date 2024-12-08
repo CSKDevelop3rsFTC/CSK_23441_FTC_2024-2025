@@ -261,9 +261,9 @@ public class lrAuto extends LinearOpMode {
         ServoImplEx hzFourBarServo_2 = (ServoImplEx) hzFourbarServo2;
         public CRServo intakeServo;
         public intake(HardwareMap hardwareMap){
-            hzFourbarServo1 = hardwareMap.get(Servo.class, "hzfourbarServo1");
+            hzFourbarServo1 = hardwareMap.get(Servo.class, "hzFourbarServo1");
             hzFourbarServo1.setDirection(Servo.Direction.REVERSE);
-            hzFourbarServo2 = hardwareMap.get(Servo.class, "hzfourbarServo2");
+            hzFourbarServo2 = hardwareMap.get(Servo.class, "hzFourbarServo2");
             intakeServo    =  hardwareMap.get(CRServo.class, "intakeServo");
         }
         public void spinTake(double dir, int time){
@@ -308,6 +308,42 @@ public class lrAuto extends LinearOpMode {
         public Action retractIntake(){
             return new RetractIntake();
         }
+        public class HoldIntake implements Action {
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                hzFourbarServo1.setPosition(0.10);
+                hzFourbarServo2.setPosition(0.10);
+                return false;
+            }
+        }
+        public Action holdIntake(){
+            return new HoldIntake();
+        }
+
+    }
+    public class hold {
+        public Servo    hzSlidesServo1;
+        public Servo    hzSlidesServo2;
+        ServoImplEx hzSlidesServo_1 = (ServoImplEx) hzSlidesServo1;
+        ServoImplEx hzSlidesServo_2 = (ServoImplEx) hzSlidesServo2;
+        public hold (HardwareMap hardwareMap){
+            hzSlidesServo1    =      hardwareMap.get(Servo.class, "hzSlidesServo1");
+            hzSlidesServo2    =      hardwareMap.get(Servo.class, "hzSlidesServo2");
+            hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
+        }
+        public class HoldIntakeSlides implements Action{
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                hzSlidesServo_1.setPwmEnable();
+                hzSlidesServo_2.setPwmEnable();
+                return false;
+            }
+        }
+        public Action holdIntakeSlides(){
+            return new HoldIntakeSlides();
+        }
     }
 
     @Override
@@ -323,6 +359,8 @@ public class lrAuto extends LinearOpMode {
         intake hzFourbarServo1 = new intake(hardwareMap);
         intake hzFourbarServo2 = new intake(hardwareMap);
         intake intakeServo = new intake(hardwareMap);
+        hold hzSlidesServo1 = new hold(hardwareMap);
+        hold hzSlidesServo2 = new hold(hardwareMap);
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(beginPose)
                 .strafeTo(new Vector2d(-56.9, 57)) // move to dropping position
@@ -367,26 +405,33 @@ public class lrAuto extends LinearOpMode {
                          clawServo.closeClaw(),
                          outtakeMotor1.slidesHold(),
                          outtakeMotor1.slidesDown()**/
-
                         //outtakeMotor1.slidesMove()
+
+                        hzSlidesServo1.holdIntakeSlides(),
                         tab1Move,
+                        vFourbarServo1.fourBarReady(),
                         outtakeMotor1.slidesUp(),
+                        vFourbarServo1.fourBarDrop(),
                         clawServo.closeClaw(),
                         vFourbarServo1.fourBarHold(),
                         outtakeMotor1.slidesDown(),
 
+                        hzSlidesServo1.holdIntakeSlides(),
                         tab2Move,
                         hzFourbarServo1.intakeSample(),
                         hzFourbarServo1.retractIntake(),
                         vFourbarServo1.fourBarReset(),
                         clawServo.openClaw(),
 
+
                         tab3Move,
-                        vFourbarServo1.fourBarDrop(),
+                        vFourbarServo1.fourBarReady(),
                         outtakeMotor1.slidesUp(),
+                        vFourbarServo1.fourBarDrop(),
                         clawServo.closeClaw(),
                         vFourbarServo1.fourBarHold(),
                         outtakeMotor1.slidesDown(),
+
 
                         tab4Move,
                         hzFourbarServo1.intakeSample(),
@@ -395,13 +440,14 @@ public class lrAuto extends LinearOpMode {
                         clawServo.openClaw(),
 
                         tab5Move,
-                        vFourbarServo1.fourBarDrop(),
+                        vFourbarServo1.fourBarReady(),
                         outtakeMotor1.slidesUp(),
+                        vFourbarServo1.fourBarDrop(),
                         clawServo.closeClaw(),
                         vFourbarServo1.fourBarHold(),
                         outtakeMotor1.slidesDown(),
-                        vFourbarServo1.fourBarReset(),
 
+                        hzSlidesServo1.holdIntakeSlides(),
                         tab6Move
 
 
