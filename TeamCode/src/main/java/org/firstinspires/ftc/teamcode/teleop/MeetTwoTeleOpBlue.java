@@ -10,11 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-@TeleOp(name="MeetZero:Teleop", group="Robot")
-public class Meet0TeleOp extends LinearOpMode {
+@TeleOp(name="MeetTwo:Blue", group="Robot")
+public class MeetTwoTeleOpBlue extends LinearOpMode {
 
     //Drive Train Motors
     public DcMotor  frontLeftDrive   = null;
@@ -31,6 +30,7 @@ public class Meet0TeleOp extends LinearOpMode {
     public Servo    hzFourbarServo2  = null;
     public Servo    hzSlidesServo1   = null;
     public Servo    hzSlidesServo2   = null;
+    public Servo    specClaw        = null;
     public CRServo  intakeServo      = null;
 
     //Outtake Servos
@@ -46,10 +46,19 @@ public class Meet0TeleOp extends LinearOpMode {
     public boolean  outPos1          = false;
     public boolean  activeClaw       = false;
     public double   intakeSpeed      = -1;
+    public String   cTest            = "";
 
     public int redVal = 0;
     public int greenVal = 0;
     public int blueVal = 0;
+
+    public int motor1pos = 0;
+    public int motor2pos = 0;
+
+    public int smotor1pos = 0;
+    public int smotor2pos = 0;
+
+    public boolean vInit = false;
 
     Gamepad currentGamepad1 = new Gamepad();
 
@@ -75,6 +84,7 @@ public class Meet0TeleOp extends LinearOpMode {
         vFourbarServo2    =      hardwareMap.get(Servo.class, "vFourbarServo2");
         clawRotateServo   =     hardwareMap.get(Servo.class, "clawRotateServo");
         clawServo         =           hardwareMap.get(Servo.class, "clawServo");
+        specClaw          =             hardwareMap.get(Servo.class, "specServo");
 
         cSense            =        hardwareMap.get(ColorSensor.class, "cSense");
 
@@ -93,6 +103,14 @@ public class Meet0TeleOp extends LinearOpMode {
 
         activeClaw = false;
 
+        smotor1pos = (outtakeMotor1.getCurrentPosition());
+        smotor2pos = (outtakeMotor2.getCurrentPosition());
+
+
+
+        outtakeMotor2.setTargetPosition(0);
+        outtakeMotor2.setTargetPosition(0);
+
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
     }
@@ -102,9 +120,9 @@ public class Meet0TeleOp extends LinearOpMode {
         double horizontal;
         double pivot;
 
-        horizontal =    gamepad1.left_stick_x ;
+        horizontal =    gamepad1.left_stick_x;
         vertical   =   -gamepad1.left_stick_y;
-        pivot      =   -gamepad1.right_stick_x;
+        pivot      =   -gamepad1.right_stick_x * 0.5;
 
         frontRightDrive.setPower(((vertical + horizontal)-pivot) * driveSpeed);
         frontLeftDrive.setPower(((vertical - horizontal)+pivot) * driveSpeed);
@@ -157,32 +175,33 @@ public class Meet0TeleOp extends LinearOpMode {
         }
     }
 
+
     public void clawOpen() {
         ServoImplEx clawServ = (ServoImplEx) clawServo;
         clawServ.setPwmEnable();
         if (gamepad2.b) {
             if (!activeClaw) {
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.3);
+                clawServo.setPosition(0.1);
                 activeClaw = true;
             }
         }
     }
 
 
+
+
     public void reset(){ // when clicked A it will set the outtakeMotor 1 to 0
-        if (Math.abs(outtakeMotor1.getCurrentPosition())>50) {
-            move(50, DcMotorSimple.Direction.REVERSE, 0.90);
+        motor1pos = Math.abs(outtakeMotor1.getCurrentPosition());
+        if (Math.abs(motor1pos) > (50 + Math.abs(smotor1pos))) {
+            move(50 + smotor1pos, DcMotorSimple.Direction.REVERSE, 0.90);
         }
-        //vFourbarServo1.setPosition(0);
-        //sleep(1000);
-        //vFourbarServo1.setPosition(0.5);
-        //vFourbarServo2.setPosition(0.7);
     }
 
     public void reset2(){ // when clicked A it will set the outtakeMotor 2 to 0
-        if (Math.abs(outtakeMotor2.getCurrentPosition())>50){
-            move2(50, DcMotorSimple.Direction.FORWARD,0.90);
+        motor2pos = Math.abs(outtakeMotor1.getCurrentPosition());
+        if (Math.abs(motor2pos) > (50 + Math.abs(smotor2pos))){
+            move2(50 + smotor2pos, DcMotorSimple.Direction.FORWARD,0.90);
         }
     }
 
@@ -211,14 +230,16 @@ public class Meet0TeleOp extends LinearOpMode {
     }
 
     public void lift(){  // brings outtake UP when RIGHT trigger held
-        if (outtakeMotor1.getCurrentPosition()<6000) {
-            move(outtakeMotor1.getCurrentPosition()+300, DcMotorSimple.Direction.REVERSE,1);
+        motor1pos = outtakeMotor1.getCurrentPosition();
+        if (Math.abs(motor1pos) < 6000 + Math.abs(motor1pos)) {
+            move(motor1pos+300, DcMotorSimple.Direction.REVERSE,1);
         }
 
     }
     public void lift2(){  // brings outtake UP when RIGHT trigger held
-        if (outtakeMotor2.getCurrentPosition()<6000) {
-            move2(outtakeMotor2.getCurrentPosition()+300, DcMotorSimple.Direction.FORWARD,1);
+        motor2pos = outtakeMotor2.getCurrentPosition();
+        if (Math.abs(motor2pos) < 6000 + Math.abs(motor2pos)) {
+            move2(motor2pos+300, DcMotorSimple.Direction.FORWARD,1);
         }
 
     }
@@ -252,12 +273,12 @@ public class Meet0TeleOp extends LinearOpMode {
 
         }
         /**
-        else {
-            stopSlides();
-            stopSlides2();
+         else {
+         stopSlides();
+         stopSlides2();
 
-        }
-        **/
+         }
+         **/
     }
 
     public void vSlides(String vPos) {
@@ -267,7 +288,7 @@ public class Meet0TeleOp extends LinearOpMode {
         if (vPos == "zero") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.0);
+            vFourbarServo2.setPosition(0.13);
             sleep(350);
             vFourbarServo1.setPosition(0.0);
         }
@@ -283,14 +304,19 @@ public class Meet0TeleOp extends LinearOpMode {
         else if (vPos == "hold") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0);
+            clawServo.setPosition(0.8);
+            activeClaw = false;
+            vFourbarServo2.setPosition(0.13);
             sleep(100);
-            vFourbarServo1.setPosition(0.15);
+            vFourbarServo1.setPosition(0.2);
         }
 
         else if (vPos == "drop") {
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.9);
+            vFourbarServo2.setPosition(0.96);
+            sleep(200);
+            clawServo.setPosition(0.8);
+            activeClaw = false;
         }
 
 
@@ -307,22 +333,43 @@ public class Meet0TeleOp extends LinearOpMode {
         System.out.println("G : " + greenVal);
         System.out.println("B : " + blueVal);
 
-        if (redVal > blueVal && redVal > greenVal) {
+        if (blueVal > redVal && blueVal > greenVal) {
+            vSlides("zero");
+            sleep(350);
+            clawServo.setDirection(Servo.Direction.FORWARD);
+            clawServo.setPosition(0.5);
+            activeClaw = true;
+            sleep(150);
+            vSlides("ready");
+
+            cTest = "red";
+        }
+        else if (redVal > blueVal && redVal > greenVal) {
             vSlides("zero");
             sleep(250);
             clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(0.3);
+            clawServo.setPosition(0.5);
             activeClaw = true;
-        }
-        else if (blueVal > redVal && blueVal > greenVal) {
-            System.out.println("val");
+            sleep(200);
+            vSlides("ready");
+            sleep(150);
+            vSlides("drop");
+            sleep(150);
+            vSlides("hold");
+
+            cTest = "blue";
         }
         else if (redVal > blueVal && greenVal > blueVal) {
+
             vSlides("zero");
             sleep(250);
             clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(0.3);
+            clawServo.setPosition(0.5);
             activeClaw = true;
+            sleep(150);
+            vSlides("ready");
+
+            cTest = "yellow";
         }
 
     }
@@ -331,15 +378,11 @@ public class Meet0TeleOp extends LinearOpMode {
 
         if (gamepad2.y) {
             vSlides("zero");
-        }
-        else if (gamepad2.right_bumper) {
+        } else if (gamepad2.right_bumper) {
             vSlides("ready");
-        }
-
-        else if (gamepad2.left_bumper) {
+        } else if (gamepad2.left_bumper) {
             vSlides("drop");
         }
-
 
     }
 
@@ -372,12 +415,12 @@ public class Meet0TeleOp extends LinearOpMode {
             contSpin(true);
             hzSlidesServo_1.setPwmEnable();
             hzSlidesServo_2.setPwmEnable();
-            hzFourbarServo1.setPosition(0.10);
-            hzFourbarServo2.setPosition(0.10);
+            hzFourbarServo1.setPosition(0.05);
+            hzFourbarServo2.setPosition(0.05);
             sleep(50);
-            hzSlidesServo2.setPosition(0.97);
-            hzSlidesServo1.setPosition(0.87);
-            sleep(750);
+            hzSlidesServo2.setPosition(0.98);
+            hzSlidesServo1.setPosition(0.88);
+            sleep(500);
             contSpin(false);
             outPos1 = false;
             colorSense();
@@ -431,8 +474,23 @@ public class Meet0TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             reGamepad();
+            /*
+            System.out.println("R : " + cSense.red());
+            System.out.println("G : " + cSense.green());
+            System.out.println("B : " + cSense.blue());
+            */
+
+            System.out.println("Color : " + cTest);
+
+            /*
 
             System.out.println("motor1:" + outtakeMotor1.getCurrentPosition() + "motor2:" + outtakeMotor2.getCurrentPosition());
+
+            System.out.println("start 1 : " + smotor1pos + " start 2 : " + smotor2pos);
+
+            System.out.println("start 1 target : " + outtakeMotor1.getTargetPosition() + " start 2 target: " + outtakeMotor2.getTargetPosition());
+
+            */
 
             driveController();
 

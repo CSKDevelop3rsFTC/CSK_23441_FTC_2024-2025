@@ -199,7 +199,7 @@ public class lrAuto extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 vFourbarServo_1.setPwmEnable();
                 vFourbarServo_2.setPwmEnable();
-                vFourbarServo2.setPosition(0.0);
+                vFourbarServo2.setPosition(0.13);
                 sleep(350);
                 vFourbarServo1.setPosition(0.0);
                 return false;
@@ -215,13 +215,14 @@ public class lrAuto extends LinearOpMode {
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 vFourbarServo_1.setPwmEnable();
                 vFourbarServo_2.setPwmEnable();
-                vFourbarServo2.setPosition(0);
+                vFourbarServo2.setPosition(0.13);
                 sleep(100);
-                vFourbarServo1.setPosition(0.15);
+                vFourbarServo1.setPosition(0.2);
                 return false;
             }
         }
         public Action fourBarHold(){
+
             return new FourBarHold();
         }
         public class FourBarReady implements  Action {              // ready position
@@ -237,6 +238,7 @@ public class lrAuto extends LinearOpMode {
             }
         }
         public Action fourBarReady(){
+
             return new FourBarReady();
         }
 
@@ -245,7 +247,7 @@ public class lrAuto extends LinearOpMode {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 vFourbarServo_2.setPwmEnable();
-                vFourbarServo2.setPosition(0.9);
+                vFourbarServo2.setPosition(0.96);
                 return false;
             }
         }
@@ -395,8 +397,6 @@ public class lrAuto extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
 
-
-
                         //.setTangent(0)
                         //.strafeToConstantHeading(new Vector2d(-60,-57))
                         /**clawServo.openClaw(),
@@ -409,12 +409,15 @@ public class lrAuto extends LinearOpMode {
 
                         hzSlidesServo1.holdIntakeSlides(),
                         tab1Move,
+
                         vFourbarServo1.fourBarReady(),
                         outtakeMotor1.slidesUp(),
                         vFourbarServo1.fourBarDrop(),
                         clawServo.closeClaw(),
                         vFourbarServo1.fourBarHold(),
-                        outtakeMotor1.slidesDown(),
+                        outtakeMotor1.slidesDown()
+
+                        /*
 
                         hzSlidesServo1.holdIntakeSlides(),
                         tab2Move,
@@ -449,6 +452,8 @@ public class lrAuto extends LinearOpMode {
 
                         hzSlidesServo1.holdIntakeSlides(),
                         tab6Move
+
+                         */
 
 
                         /**

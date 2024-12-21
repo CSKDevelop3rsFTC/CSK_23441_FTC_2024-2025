@@ -32,6 +32,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.PinpointDrive;
 
@@ -61,7 +62,7 @@ public class rrAuto extends LinearOpMode {
         public class OpenClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                clawServo.setPosition(0.3);
+                clawServo.setPosition(0.5);
                 sleep(1000);
                 return false;
             }
@@ -72,15 +73,41 @@ public class rrAuto extends LinearOpMode {
 
     }
 
+    public class intake {
+        public Servo hzFourbarServo1;
+        public Servo hzFourbarServo2;
+
+        public intake(HardwareMap hardwareMap) {
+            hzFourbarServo1 = hardwareMap.get(Servo.class, "hzSlidesServo1");
+            hzFourbarServo2 = hardwareMap.get(Servo.class, "hzSlidesServo2");
+        }
+
+        public class Intake implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket packet) {
+                ServoImplEx hzFourBarServo_1 = (ServoImplEx) hzFourbarServo1;
+                ServoImplEx hzFourBarServo_2 = (ServoImplEx) hzFourbarServo2;
+                hzFourBarServo_1.setPwmEnable();
+                hzFourBarServo_2.setPwmEnable();
+                return false;
+            }
+        }
+
+        public Action intakeMove() {
+            return new Intake();
+        }
+
+    }
+
     public class slides {
 
         private DcMotor outtakeMotor1;
         private DcMotor outtakeMotor2;
-        private Servo clawServo;
+        private Servo specServo;
 
         public slides(HardwareMap hardwareMap) {
-            clawServo = hardwareMap.get(Servo.class, "clawServo");
-            clawServo.setDirection(Servo.Direction.FORWARD);
+            specServo = hardwareMap.get(Servo.class, "specServo");
+            specServo.setDirection(Servo.Direction.FORWARD);
             outtakeMotor1 = hardwareMap.get(DcMotor.class, "outtakeMotor1");
             outtakeMotor2 = hardwareMap.get(DcMotor.class, "outtakeMotor2");
         }
@@ -100,6 +127,7 @@ public class rrAuto extends LinearOpMode {
                 return false;
             }
         }
+
         public Action slidesUp() {
             return new SlidesUp();
         }
@@ -124,6 +152,7 @@ public class rrAuto extends LinearOpMode {
             return new SlidesDown();
         }
 
+
         public class SlidesHold implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
@@ -140,7 +169,7 @@ public class rrAuto extends LinearOpMode {
             return new SlidesHold();
         }
 
-        public class SlidesMove implements Action {
+        public class SlidesMoveUp implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
                 int currentPos = -outtakeMotor1.getCurrentPosition();
@@ -162,31 +191,46 @@ public class rrAuto extends LinearOpMode {
                 outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                sleep(200);
-
-                outtakeMotor1.setTargetPosition(0);
-                outtakeMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
-                outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                outtakeMotor1.setPower(0.9);
-                outtakeMotor2.setTargetPosition(0);
-                outtakeMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
-                outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                outtakeMotor2.setPower(0.9);
-
-                while (currentPos > -50) {
-                    sleep(1);
-                    currentPos = outtakeMotor1.getCurrentPosition();
-                    System.out.println(currentPos);
-                }
-
                 return false;
             }
-        }
 
-        public Action slidesMove() {
-            return new SlidesMove();
-        }
+            public Action slidesMoveUp() {
+                return new SlidesMoveUp();
+            }
 
+            public class SlidesMoveDown implements Action {
+                @Override
+                public boolean run(@NonNull TelemetryPacket packet) {
+                    int currentPos = -outtakeMotor1.getCurrentPosition();
+
+                    outtakeMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                    outtakeMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+                    outtakeMotor1.setTargetPosition(0);
+                    outtakeMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+                    outtakeMotor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    outtakeMotor1.setPower(0.9);
+                    outtakeMotor2.setTargetPosition(0);
+                    outtakeMotor2.setDirection(DcMotorSimple.Direction.FORWARD);
+                    outtakeMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    outtakeMotor2.setPower(0.9);
+
+                    while (currentPos > -50) {
+                        sleep(1);
+                        currentPos = outtakeMotor1.getCurrentPosition();
+                        System.out.println(currentPos);
+                    }
+
+                    return false;
+                }
+
+            }
+
+            public Action slidesMoveDown() {
+                return new SlidesMoveDown();
+            }
+
+        }
     }
 
     @Override
@@ -197,16 +241,117 @@ public class rrAuto extends LinearOpMode {
         claw clawServo = new claw(hardwareMap);
         slides outtakeMotor1 = new slides(hardwareMap);
         slides outtakeMotor2 = new slides(hardwareMap);
+        intake hzFourbarServo1 = new intake(hardwareMap);
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(beginPose)
-                .strafeTo(new Vector2d(-62, -11));
+        TrajectoryActionBuilder preLoad = drive.actionBuilder(beginPose)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-41,-0), Math.PI / 2); // move up to center rungs
+                //slides up
+        TrajectoryActionBuilder preLoad1 = drive.actionBuilder(new Pose2d(-41,0,0))
+                .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1.25); // replace later with action of placing specimen
 
-        Action tab1Move = tab1.build();
+        TrajectoryActionBuilder get = drive.actionBuilder(new Pose2d(-33,0,0))
+                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
+
+                .strafeTo(new Vector2d(-52,-33 ))
+
+                .turnTo(Math.toRadians(180))
+
+                .strafeTo(new Vector2d(-52,-11))
+
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder place = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+                //.setTangent(Math.PI)
+                .strafeTo(new Vector2d(-41,4))
+                .turnTo(Math.toRadians(0));
+
+        TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-41,4,0))
+                .strafeTo(new Vector2d(-33, 4)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1.25); // replace later with action of placing specimen
+
+
+        TrajectoryActionBuilder get1 = drive.actionBuilder(new Pose2d(-33,4,0))
+                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
+
+                .strafeTo(new Vector2d(-52,-33 ))
+
+                .turnTo(Math.toRadians(180))
+
+                .strafeTo(new Vector2d(-52,-11))
+
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder place1 = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+                //.setTangent(Math.PI)
+                .strafeTo(new Vector2d(-41,8))
+                .turnTo(Math.toRadians(0));
+
+        TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-41,8,0))
+                .strafeTo(new Vector2d(-33, 8)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1.25); // replace later with action of placing specimen
+
+        TrajectoryActionBuilder get2 = drive.actionBuilder(new Pose2d(-33,8,0))
+                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
+
+                .strafeTo(new Vector2d(-52,-33 ))
+
+                .turnTo(Math.toRadians(180))
+
+                .strafeTo(new Vector2d(-52,-11))
+
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder place2 = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+                //.setTangent(Math.PI)
+                .strafeTo(new Vector2d(-41,-4))
+                .turnTo(Math.toRadians(0));
+
+        TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-41,-4,0))
+                .strafeTo(new Vector2d(-33, -4)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1.25); // replace later with action of placing specimen
+
+        Action preloadMove = preLoad.build();
+
+        Action preload1Move = preLoad1.build();
+
+        Action getMove = get.build();
+
+        Action placeMove = place.build();
+
+        Action lineupMove = lineUp.build();
+
+        Action get1Move = get1.build();
+
+        Action place1Move = place1.build();
+
+        Action lineup1Move = lineUp1.build();
+
+        Action get2Move = get2.build();
+
+        Action place2Move = place2.build();
+
+        Action lineup2Move = lineUp2.build();
 
         waitForStart();
 
         Actions.runBlocking(
                 new SequentialAction(
+
+                        hzFourbarServo1.intakeMove(),
+                        preloadMove,
+                        preload1Move,
+                        getMove,
+                        placeMove,
+                        lineupMove,
+                        get1Move,
+                        place1Move,
+                        lineup1Move
 
 
 
@@ -219,7 +364,6 @@ public class rrAuto extends LinearOpMode {
                          outtakeMotor1.slidesHold(),
                          outtakeMotor1.slidesDown()**/
 
-                        outtakeMotor1.slidesMove()
 
 
                         /**
