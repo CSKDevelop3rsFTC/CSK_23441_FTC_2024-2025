@@ -24,6 +24,7 @@ import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
 
 import java.util.List;
+import java.util.Vector;
 
 // Non-RR imports
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -245,28 +246,43 @@ public class rrAuto extends LinearOpMode {
 
         TrajectoryActionBuilder preLoad = drive.actionBuilder(beginPose)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-41,-0), Math.PI / 2); // move up to center rungs
+                .strafeTo(new Vector2d(-41,0)); // move up to center rungs
                 //slides up
         TrajectoryActionBuilder preLoad1 = drive.actionBuilder(new Pose2d(-41,0,0))
                 .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
                 //slides down and unclip
                 .waitSeconds(1.25); // replace later with action of placing specimen
 
+        TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(-33,0,0))
+                .strafeTo(new Vector2d(-46,0))
+
+                .strafeTo(new Vector2d(-23,-22))
+                .strafeTo(new Vector2d(-55,-25))
+
+                .strafeTo(new Vector2d(-23,-22))
+                .strafeTo(new Vector2d(-23,-28))
+                .strafeTo(new Vector2d(-55,-28))
+
+                .strafeTo(new Vector2d(-23,-28))
+                .strafeTo(new Vector2d(-23,-34))
+                .strafeTo(new Vector2d(-55,-34))
+
+
+                .strafeTo(new Vector2d(-52,-11));
+
         TrajectoryActionBuilder get = drive.actionBuilder(new Pose2d(-33,0,0))
                 .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
 
                 .strafeTo(new Vector2d(-52,-33 ))
 
-                .turnTo(Math.toRadians(180))
-
                 .strafeTo(new Vector2d(-52,-11))
 
                 .waitSeconds(0.5);
 
-        TrajectoryActionBuilder place = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+        TrajectoryActionBuilder place = drive.actionBuilder(new Pose2d(-52,-11,0))
                 //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,4))
-                .turnTo(Math.toRadians(0));
+                .strafeTo(new Vector2d(-41,4));
+
 
         TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-41,4,0))
                 .strafeTo(new Vector2d(-33, 4)) // go forward to line up specimen
@@ -279,16 +295,14 @@ public class rrAuto extends LinearOpMode {
 
                 .strafeTo(new Vector2d(-52,-33 ))
 
-                .turnTo(Math.toRadians(180))
 
                 .strafeTo(new Vector2d(-52,-11))
 
                 .waitSeconds(0.5);
 
-        TrajectoryActionBuilder place1 = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+        TrajectoryActionBuilder place1 = drive.actionBuilder(new Pose2d(-52,-11,0))
                 //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,8))
-                .turnTo(Math.toRadians(0));
+                .strafeTo(new Vector2d(-41,8));
 
         TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-41,8,0))
                 .strafeTo(new Vector2d(-33, 8)) // go forward to line up specimen
@@ -300,16 +314,16 @@ public class rrAuto extends LinearOpMode {
 
                 .strafeTo(new Vector2d(-52,-33 ))
 
-                .turnTo(Math.toRadians(180))
+
 
                 .strafeTo(new Vector2d(-52,-11))
 
                 .waitSeconds(0.5);
 
-        TrajectoryActionBuilder place2 = drive.actionBuilder(new Pose2d(-52,-11,Math.toRadians(180)))
+        TrajectoryActionBuilder place2 = drive.actionBuilder(new Pose2d(-52,-11,0))
                 //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,-4))
-                .turnTo(Math.toRadians(0));
+                .strafeTo(new Vector2d(-41,-4));
+
 
         TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-41,-4,0))
                 .strafeTo(new Vector2d(-33, -4)) // go forward to line up specimen
@@ -338,6 +352,8 @@ public class rrAuto extends LinearOpMode {
 
         Action lineup2Move = lineUp2.build();
 
+        Action pushAction = pushSamples.build();
+
         waitForStart();
 
         Actions.runBlocking(
@@ -346,6 +362,7 @@ public class rrAuto extends LinearOpMode {
                         hzFourbarServo1.intakeMove(),
                         preloadMove,
                         preload1Move,
+                        pushAction,
                         getMove,
                         placeMove,
                         lineupMove,
