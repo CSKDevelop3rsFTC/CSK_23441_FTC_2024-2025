@@ -51,8 +51,8 @@ public class rrAuto extends LinearOpMode {
         public class CloseClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                clawServo.setPosition(0.8);
-                sleep(0);
+                clawServo.setPosition(0.65);
+                sleep(450);
                 return false;
             }
         }
@@ -63,8 +63,8 @@ public class rrAuto extends LinearOpMode {
         public class OpenClaw implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket packet) {
-                clawServo.setPosition(0.5);
-                sleep(1000);
+                clawServo.setPosition(0.35);
+                sleep(450);
                 return false;
             }
         }
@@ -96,6 +96,113 @@ public class rrAuto extends LinearOpMode {
 
         public Action intakeMove() {
             return new Intake();
+        }
+
+    }
+    public class vFourBar {
+
+        private Servo vFourbarServo1;
+        private Servo vFourbarServo2;
+
+        public vFourBar(HardwareMap hardwareMap) {
+            vFourbarServo1 = hardwareMap.get(Servo.class, "vFourbarServo1");
+            vFourbarServo2 = hardwareMap.get(Servo.class, "vFourbarServo2");
+            vFourbarServo1.setDirection(Servo.Direction.REVERSE);
+            vFourbarServo2.setDirection(Servo.Direction.REVERSE);
+        }
+        public class FourBarStart implements  Action {              // grab from box position //pro was 0.13, 0.19
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                ServoImplEx vFourbarServo_1 = (ServoImplEx) vFourbarServo1;
+                ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
+                vFourbarServo_1.setPwmEnable();
+                vFourbarServo_2.setPwmEnable();
+                vFourbarServo2.setPosition(0.12);
+                sleep(350);
+                vFourbarServo1.setPosition(0.21);
+                sleep(350);
+                return false;
+            }
+        }
+        public Action fourBarStart(){
+            return new FourBarStart();
+        }
+
+        public class FourBarReset implements  Action {              // hold position
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                ServoImplEx vFourbarServo_1 = (ServoImplEx) vFourbarServo1;
+                ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
+                vFourbarServo_1.setPwmEnable();
+                vFourbarServo_2.setPwmEnable();
+                vFourbarServo2.setPosition(0.0);
+                sleep(350);
+                vFourbarServo1.setPosition(0.67);
+                sleep(400);
+                return false;
+            }
+        }
+        public Action fourBarReset(){
+            return new FourBarReset();
+        }
+
+        public class FourBarGrab implements  Action {              // grab from wall
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                ServoImplEx vFourbarServo_1 = (ServoImplEx) vFourbarServo1;
+                ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
+                vFourbarServo_1.setPwmEnable();
+                vFourbarServo_2.setPwmEnable();
+                vFourbarServo2.setPosition(0.2);
+                sleep(350);
+                vFourbarServo1.setPosition(0.94);
+                sleep(550);
+                return false;
+            }
+        }
+        public Action fourBarGrab(){
+
+            return new FourBarGrab();
+        }
+        public class FourBarPlace implements  Action {              // place on bar
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                ServoImplEx vFourbarServo_1 = (ServoImplEx) vFourbarServo1;
+                ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
+                vFourbarServo_1.setPwmDisable();
+                vFourbarServo_2.setPwmDisable();
+                vFourbarServo1.setPosition(0.48);
+                sleep(350);
+                vFourbarServo2.setPosition(0.5);
+                sleep(350);
+                return false;
+            }
+        }
+        public Action fourBarPlace(){
+
+            return new FourBarPlace();
+        }
+
+        public class FourBarEnter implements  Action {              // drop position
+
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                ServoImplEx vFourbarServo_1 = (ServoImplEx) vFourbarServo1;
+                ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
+                vFourbarServo_2.setPwmEnable();
+                vFourbarServo1.setPosition(0.46);
+                sleep(350);
+                vFourbarServo2.setPosition(0.79);
+                sleep(700);
+                return false;
+            }
+        }
+        public Action fourBarEnter(){
+            return new FourBarEnter();
         }
 
     }
@@ -243,116 +350,83 @@ public class rrAuto extends LinearOpMode {
         slides outtakeMotor1 = new slides(hardwareMap);
         slides outtakeMotor2 = new slides(hardwareMap);
         intake hzFourbarServo1 = new intake(hardwareMap);
+        vFourBar vFourbarServo1 = new vFourBar(hardwareMap);
+        vFourBar vFourbarServo2 = new vFourBar(hardwareMap);
 
-        TrajectoryActionBuilder preLoad = drive.actionBuilder(beginPose)
-                .setTangent(0)
-                .strafeTo(new Vector2d(-41,0)); // move up to center rungs
-                //slides up
-        TrajectoryActionBuilder preLoad1 = drive.actionBuilder(new Pose2d(-41,0,0))
+        TrajectoryActionBuilder preLoad1 = drive.actionBuilder(beginPose)
                 .strafeTo(new Vector2d(-33, 0)) // go forward to line up specimen
                 //slides down and unclip
-                .waitSeconds(1.25); // replace later with action of placing specimen
+                .waitSeconds(1); // replace later with action of placing specimen
 
         TrajectoryActionBuilder pushSamples = drive.actionBuilder(new Pose2d(-33,0,0))
-                .strafeTo(new Vector2d(-46,0))
+                .strafeTo(new Vector2d(-46,0)) // backwards
 
-                .strafeTo(new Vector2d(-23,-22))
+                .strafeTo(new Vector2d(-10,-46)) // infront
+                .strafeTo(new Vector2d(-45,-46)) // sample 1 pushed
+
+                //.strafeTo(new Vector2d(-10,-46))
+                .strafeTo(new Vector2d(-10,-54)) // infront 2
+                .strafeTo(new Vector2d(-45,-54)) // sample 2 pushed
+
+                //.strafeTo(new Vector2d(-10,-54))
+                .strafeTo(new Vector2d(-10,-63)) // infront 3
+                .strafeTo(new Vector2d(-55,-63)); // sample 3 pushed
+
+        TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-57,-60,0))
+                .strafeTo(new Vector2d(-33, -6)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1); // replace later with action of placing specimen
+
+
+        TrajectoryActionBuilder get1 = drive.actionBuilder(new Pose2d(-33,-6,0))
+                .strafeTo(new Vector2d(-55,-25 ))
+
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-60,-25,0))
+                .strafeTo(new Vector2d(-33, -2)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1); // replace later with action of placing specimen
+
+        TrajectoryActionBuilder get2 = drive.actionBuilder(new Pose2d(-33,-2,0))
+                .strafeTo(new Vector2d(-55,-25 ))
+
+
+                .waitSeconds(0.5);
+
+        TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-60,-25,0))
+                .strafeTo(new Vector2d(-33, -14)) // go forward to line up specimen
+                //slides down and unclip
+                .waitSeconds(1); // replace later with action of placing specimen
+
+        TrajectoryActionBuilder get3 = drive.actionBuilder(new Pose2d(-33,-14,0))
                 .strafeTo(new Vector2d(-55,-25))
 
-                .strafeTo(new Vector2d(-23,-22))
-                .strafeTo(new Vector2d(-23,-28))
-                .strafeTo(new Vector2d(-55,-28))
-
-                .strafeTo(new Vector2d(-23,-28))
-                .strafeTo(new Vector2d(-23,-34))
-                .strafeTo(new Vector2d(-55,-34))
-
-
-                .strafeTo(new Vector2d(-52,-11));
-
-        TrajectoryActionBuilder get = drive.actionBuilder(new Pose2d(-33,0,0))
-                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
-
-                .strafeTo(new Vector2d(-52,-33 ))
-
-                .strafeTo(new Vector2d(-52,-11))
 
                 .waitSeconds(0.5);
 
-        TrajectoryActionBuilder place = drive.actionBuilder(new Pose2d(-52,-11,0))
-                //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,4));
-
-
-        TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-41,4,0))
-                .strafeTo(new Vector2d(-33, 4)) // go forward to line up specimen
+        TrajectoryActionBuilder lineUp3 = drive.actionBuilder(new Pose2d(-60,-25,0))
+                .strafeTo(new Vector2d(-33, -10)) // go forward to line up specimen
                 //slides down and unclip
-                .waitSeconds(1.25); // replace later with action of placing specimen
-
-
-        TrajectoryActionBuilder get1 = drive.actionBuilder(new Pose2d(-33,4,0))
-                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
-
-                .strafeTo(new Vector2d(-52,-33 ))
-
-
-                .strafeTo(new Vector2d(-52,-11))
-
-                .waitSeconds(0.5);
-
-        TrajectoryActionBuilder place1 = drive.actionBuilder(new Pose2d(-52,-11,0))
-                //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,8));
-
-        TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-41,8,0))
-                .strafeTo(new Vector2d(-33, 8)) // go forward to line up specimen
-                //slides down and unclip
-                .waitSeconds(1.25); // replace later with action of placing specimen
-
-        TrajectoryActionBuilder get2 = drive.actionBuilder(new Pose2d(-33,8,0))
-                .strafeTo(new Vector2d(-45, 0)) // move backwards a bit
-
-                .strafeTo(new Vector2d(-52,-33 ))
-
-
-
-                .strafeTo(new Vector2d(-52,-11))
-
-                .waitSeconds(0.5);
-
-        TrajectoryActionBuilder place2 = drive.actionBuilder(new Pose2d(-52,-11,0))
-                //.setTangent(Math.PI)
-                .strafeTo(new Vector2d(-41,-4));
-
-
-        TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-41,-4,0))
-                .strafeTo(new Vector2d(-33, -4)) // go forward to line up specimen
-                //slides down and unclip
-                .waitSeconds(1.25); // replace later with action of placing specimen
-
-        Action preloadMove = preLoad.build();
+                .waitSeconds(1); // replace later with action of placing specimen
 
         Action preload1Move = preLoad1.build();
-
-        Action getMove = get.build();
-
-        Action placeMove = place.build();
 
         Action lineupMove = lineUp.build();
 
         Action get1Move = get1.build();
 
-        Action place1Move = place1.build();
-
         Action lineup1Move = lineUp1.build();
 
         Action get2Move = get2.build();
 
-        Action place2Move = place2.build();
-
         Action lineup2Move = lineUp2.build();
 
         Action pushAction = pushSamples.build();
+
+        Action get3Move = get2.build();
+
+        Action lineup3Move = lineUp3.build();
 
         waitForStart();
 
@@ -360,16 +434,31 @@ public class rrAuto extends LinearOpMode {
                 new SequentialAction(
 
                         hzFourbarServo1.intakeMove(),
-                        preloadMove,
-                        preload1Move,
+                        vFourbarServo1.fourBarGrab(),
+                        clawServo.openClaw(),
+                        vFourbarServo1.fourBarEnter()
+                        /*preload1Move,
                         pushAction,
-                        getMove,
-                        placeMove,
                         lineupMove,
-                        get1Move,
-                        place1Move,
-                        lineup1Move
+                        get1Move*/
+                        //lineup1Move,
+                        //get2Move,
+                        //lineup2Move,
+                        //get3Move,
+                        //lineup3Move
 
+
+                        /*vFourbarServo1.fourBarReset(),
+                        clawServo.openClaw(),
+                        vFourbarServo1.fourBarStart(),
+                        clawServo.closeClaw(),
+                        vFourbarServo1.fourBarDrop(),
+                        vFourbarServo1.fourBarPlace(),
+                        clawServo.openClaw(),
+                        vFourbarServo1.fourBarReset(),
+                        clawServo.openClaw(),
+                        vFourbarServo1.fourBarGrab(),
+                        clawServo.closeClaw()*/
 
 
                         //.setTangent(0)

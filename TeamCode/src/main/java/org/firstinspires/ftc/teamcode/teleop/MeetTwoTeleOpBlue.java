@@ -96,7 +96,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         hzSlidesServo2.setDirection(Servo.Direction.REVERSE);
         hzFourbarServo1.setDirection(Servo.Direction.REVERSE);
 
-        vFourbarServo1.setDirection(Servo.Direction.FORWARD);
+        vFourbarServo1.setDirection(Servo.Direction.REVERSE);
         vFourbarServo2.setDirection(Servo.Direction.REVERSE);
 
         cSense.enableLed(true);
@@ -170,7 +170,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             if (activeClaw){
                 activeClaw = false;
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.8);
+                clawServo.setPosition(0.65);
             }
         }
     }
@@ -182,7 +182,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         if (gamepad2.b) {
             if (!activeClaw) {
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.1);
+                clawServo.setPosition(0.35);
                 activeClaw = true;
             }
         }
@@ -193,15 +193,15 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
     public void reset(){ // when clicked A it will set the outtakeMotor 1 to 0
         motor1pos = Math.abs(outtakeMotor1.getCurrentPosition());
-        if (Math.abs(motor1pos) > (50 + Math.abs(smotor1pos))) {
-            move(50 + smotor1pos, DcMotorSimple.Direction.REVERSE, 0.90);
+        if (Math.abs(motor1pos) > (40 + Math.abs(smotor1pos))) {
+            move(smotor1pos - 40, DcMotorSimple.Direction.FORWARD, 0.2);
         }
     }
 
     public void reset2(){ // when clicked A it will set the outtakeMotor 2 to 0
-        motor2pos = Math.abs(outtakeMotor1.getCurrentPosition());
-        if (Math.abs(motor2pos) > (50 + Math.abs(smotor2pos))){
-            move2(50 + smotor2pos, DcMotorSimple.Direction.FORWARD,0.90);
+        motor2pos = Math.abs(outtakeMotor2.getCurrentPosition());
+        if (motor2pos > (40 + Math.abs(smotor2pos))){
+            move2(-smotor2pos - 40, DcMotorSimple.Direction.REVERSE,0.2);
         }
     }
 
@@ -232,25 +232,25 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
     public void lift(){  // brings outtake UP when RIGHT trigger held
         motor1pos = outtakeMotor1.getCurrentPosition();
         if (Math.abs(motor1pos) < 6000 + Math.abs(motor1pos)) {
-            move(motor1pos+300, DcMotorSimple.Direction.REVERSE,1);
+            move(motor1pos+300, DcMotorSimple.Direction.FORWARD,0.2);
         }
 
     }
     public void lift2(){  // brings outtake UP when RIGHT trigger held
         motor2pos = outtakeMotor2.getCurrentPosition();
         if (Math.abs(motor2pos) < 6000 + Math.abs(motor2pos)) {
-            move2(motor2pos+300, DcMotorSimple.Direction.FORWARD,1);
+            move2(motor2pos+300, DcMotorSimple.Direction.REVERSE,0.2);
         }
 
     }
     public void drop() {  // brings outtake DOWN when LEFT trigger held
         if (Math.abs(outtakeMotor1.getCurrentPosition()) > 80) {
-            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 300), DcMotorSimple.Direction.REVERSE, 0.95);
+            move(-(Math.abs(outtakeMotor1.getCurrentPosition()) - 30), DcMotorSimple.Direction.FORWARD, 0.1);
         }
     }
     public void drop2() {  // brings outtake DOWN when LEFT trigger held
         if (Math.abs(outtakeMotor2.getCurrentPosition()) > 80) {
-            move2(-(Math.abs(outtakeMotor2.getCurrentPosition()) - 300), DcMotorSimple.Direction.FORWARD, 0.95);
+            move2(-(Math.abs(outtakeMotor2.getCurrentPosition()) - 300), DcMotorSimple.Direction.REVERSE, 0.1);
         }
     }
 
@@ -288,36 +288,64 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         if (vPos == "zero") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.13);
+            vFourbarServo2.setPosition(0.0);
+            vFourbarServo1.setPosition(0.8);
+            sleep(300);
+            clawServo.setPosition(0.35);
+            activeClaw = true;
+        }
+
+        else if (vPos == "enter") {
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo1.setPosition(0.46);
             sleep(350);
-            vFourbarServo1.setPosition(0.0);
+            vFourbarServo2.setPosition(0.79);
+        }
+
+        else if (vPos == "grab") {
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0.2);
+            sleep(350);
+            vFourbarServo1.setPosition(0.94);
+        }
+        else if (vPos == "place"){
+            vFourbarServo_1.setPwmDisable();
+            vFourbarServo_2.setPwmDisable();
+            vFourbarServo1.setPosition(0.48);
+            sleep(350);
+            vFourbarServo2.setPosition(0.5);
+
+
         }
 
         else if (vPos == "ready") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo1.setPosition(0.4);
-            sleep(500);
-            vFourbarServo2.setPosition(0.7);
+            vFourbarServo1.setPosition(0.67);
+            sleep(200);
+            vFourbarServo2.setPosition(0.5);
+            sleep(250);
+            vFourbarServo1.setPosition(0.57);
         }
 
         else if (vPos == "hold") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            clawServo.setPosition(0.8);
-            activeClaw = false;
-            vFourbarServo2.setPosition(0.13);
-            sleep(100);
-            vFourbarServo1.setPosition(0.2);
+            vFourbarServo2.setPosition(0.0);
+            sleep(350);
+            vFourbarServo1.setPosition(0.67);
         }
 
         else if (vPos == "drop") {
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.96);
+            vFourbarServo2.setPosition(0.9);
             sleep(200);
-            clawServo.setPosition(0.8);
+            clawServo.setPosition(0.6);
             activeClaw = false;
         }
+
 
 
     }
@@ -362,10 +390,6 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         else if (redVal > blueVal && greenVal > blueVal) {
 
             vSlides("zero");
-            sleep(250);
-            clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(0.5);
-            activeClaw = true;
             sleep(150);
             vSlides("ready");
 
@@ -382,6 +406,16 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             vSlides("ready");
         } else if (gamepad2.left_bumper) {
             vSlides("drop");
+        }
+
+        if (gamepad1.x) {
+            vSlides("enter");
+        }
+        else if (gamepad1.y) {
+            vSlides("grab");
+        }
+        else if (gamepad1.b) {
+            vSlides("place");
         }
 
     }
@@ -415,11 +449,11 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             contSpin(true);
             hzSlidesServo_1.setPwmEnable();
             hzSlidesServo_2.setPwmEnable();
-            hzFourbarServo1.setPosition(0.05);
-            hzFourbarServo2.setPosition(0.05);
+            hzFourbarServo1.setPosition(0.13);
+            hzFourbarServo2.setPosition(0.13);
             sleep(50);
-            hzSlidesServo2.setPosition(0.98);
-            hzSlidesServo1.setPosition(0.88);
+            hzSlidesServo2.setPosition(0.94);
+            hzSlidesServo1.setPosition(0.84);
             sleep(500);
             contSpin(false);
             outPos1 = false;
@@ -482,7 +516,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
             System.out.println("Color : " + cTest);
 
-            /*
+
 
             System.out.println("motor1:" + outtakeMotor1.getCurrentPosition() + "motor2:" + outtakeMotor2.getCurrentPosition());
 
@@ -490,7 +524,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
             System.out.println("start 1 target : " + outtakeMotor1.getTargetPosition() + " start 2 target: " + outtakeMotor2.getTargetPosition());
 
-            */
+
 
             driveController();
 
