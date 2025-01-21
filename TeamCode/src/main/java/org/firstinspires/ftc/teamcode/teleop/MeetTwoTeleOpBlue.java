@@ -170,7 +170,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             if (activeClaw){
                 activeClaw = false;
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.65);
+                clawServo.setPosition(0.45);
             }
         }
     }
@@ -182,7 +182,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         if (gamepad2.b) {
             if (!activeClaw) {
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.35);
+                clawServo.setPosition(0.24);
                 activeClaw = true;
             }
         }
@@ -308,15 +308,20 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             vFourbarServo_2.setPwmEnable();
             vFourbarServo2.setPosition(0.2);
             sleep(350);
-            vFourbarServo1.setPosition(0.94);
+            vFourbarServo1.setPosition(0.98);
+        }
+        else if (vPos == "up"){
+            vFourbarServo_1.setPwmEnable();
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0.21);
+            sleep(350);
         }
         else if (vPos == "place"){
             vFourbarServo_1.setPwmDisable();
             vFourbarServo_2.setPwmDisable();
-            vFourbarServo1.setPosition(0.48);
+            vFourbarServo1.setPosition(0.55); //previously 0.49
             sleep(350);
-            vFourbarServo2.setPosition(0.5);
-
+            vFourbarServo2.setPosition(0.46);
 
         }
 
@@ -452,8 +457,8 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             hzFourbarServo1.setPosition(0.13);
             hzFourbarServo2.setPosition(0.13);
             sleep(50);
-            hzSlidesServo2.setPosition(0.94);
-            hzSlidesServo1.setPosition(0.84);
+            hzSlidesServo2.setPosition(0.98);
+            hzSlidesServo1.setPosition(0.88);
             sleep(500);
             contSpin(false);
             outPos1 = false;
