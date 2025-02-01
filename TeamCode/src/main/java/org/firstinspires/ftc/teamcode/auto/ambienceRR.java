@@ -109,8 +109,8 @@ public class ambienceRR extends LinearOpMode {
                 ServoImplEx hzFourBarServo_2 = (ServoImplEx) hzFourbarServo2;
                 hzFourBarServo_1.setPwmEnable();
                 hzFourBarServo_2.setPwmEnable();
-                hzFourbarServo1.setPosition(0.94);
-                hzFourbarServo2.setPosition(0.94);
+                hzFourbarServo1.setPosition(0.98);
+                hzFourbarServo2.setPosition(0.98);
 
 
                 return false;
@@ -183,8 +183,8 @@ public class ambienceRR extends LinearOpMode {
                 ServoImplEx vFourbarServo_2 = (ServoImplEx) vFourbarServo2;
                 vFourbarServo_1.setPwmEnable();
                 vFourbarServo_2.setPwmEnable();
-                vFourbarServo1.setPosition(0.52);
-                vFourbarServo2.setPosition(0.53);
+                vFourbarServo1.setPosition(0.58); //.55
+                vFourbarServo2.setPosition(0.5); //.53
                 //vFourbarServo1.setPosition(0.67);
                // sleep(250);
               //  vFourbarServo2.setPosition(0.1);
@@ -471,28 +471,27 @@ public class ambienceRR extends LinearOpMode {
                 //.strafeTo(new Vector2d(-55,0)) // backwards
                 //.strafeTo(new Vector2d(-50,-30))
 
-                .splineToConstantHeading(new Vector2d(-50,-30), Math.PI/2)
-
-                .strafeTo(new Vector2d(-10,-46)) // infront
-                .strafeTo(new Vector2d(-45,-46)) // sample 1 pushed
-
-                //.strafeTo(new Vector2d(-10,-46))
-                .strafeTo(new Vector2d(-10,-54)) // infront 2
-                .strafeTo(new Vector2d(-45,-54)) // sample 2 pushed
-                .strafeTo(new Vector2d(-59,-50)) // sample 2 pushed
-                .afterTime(0, vFourbarServo1.fourBarGrab());
-
+             //   .splineToConstantHeading(new Vector2d(-50,-30), Math.PI/2)
+                .strafeToLinearHeading(new Vector2d(-40,-20), Math.toRadians(-210))
+                .afterTime(0, hzSlidesServo1.hzOut())
+                .turnTo(Math.toRadians(-320))
+                .afterTime(0, hzFourbarServo1.hzReset())
+                .strafeToLinearHeading(new Vector2d(-40,-34),Math.toRadians(-210))
+                .afterTime(0, hzSlidesServo1.hzOut())
+                .turnTo(Math.toRadians(-320))
+                .afterTime(0, hzSlidesServo1.intakeMove())// sample 2 pushed
+                .strafeToLinearHeading(new Vector2d(-57.5,-42),Math.toRadians(0));
         // perform icy grab
 
-        TrajectoryActionBuilder unHook1 = drive.actionBuilder(new Pose2d(-59,-50,0))
-                .strafeTo(new Vector2d(-63 , -50)) // go forward to  enter pos
+        TrajectoryActionBuilder unHook1 = drive.actionBuilder(new Pose2d(-57.5,-42,0))
+                .strafeTo(new Vector2d(-63 , -42)) // go forward to  enter pos
                 .afterTime(0, vFourbarServo1.fourBarUp());
 
         TrajectoryActionBuilder moveUp = drive.actionBuilder(new Pose2d(-63,-50,0))
-                .strafeTo(new Vector2d(-45 , -5)) // go forward to  enter pos
+                .strafeTo(new Vector2d(-48 , -5)) // go forward to  enter pos
                 .afterDisp(0, vFourbarServo1.fourBarEnter());
 
-        TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-45,-5,0))
+        TrajectoryActionBuilder lineUp = drive.actionBuilder(new Pose2d(-48,-5,0))
                 .strafeTo(new Vector2d(-34, -5)); // lineup to place
         //place specimen
 
@@ -501,17 +500,17 @@ public class ambienceRR extends LinearOpMode {
                 .strafeTo(new Vector2d(-42,-5)); // move backwards then release specimen
 
         TrajectoryActionBuilder get1 = drive.actionBuilder(new Pose2d(-42,-5,0))
-                .strafeTo(new Vector2d(-59,-42))
+                .strafeTo(new Vector2d(-57.5,-42))
                 .afterTime(0, vFourbarServo1.fourBarGrab());
 
-        TrajectoryActionBuilder unHook2 = drive.actionBuilder(new Pose2d(-59,-42,0))
+        TrajectoryActionBuilder unHook2 = drive.actionBuilder(new Pose2d(-57.5,-42,0))
                 .strafeTo(new Vector2d(-63 , -42)) // go forward to  enter pos
                 .afterTime(0, vFourbarServo1.fourBarUp());
         TrajectoryActionBuilder enterPos1 = drive.actionBuilder(new Pose2d(-63,-42,0))
-                .strafeTo(new Vector2d(-45 , -2))
+                .strafeTo(new Vector2d(-48 , -2))
                 .afterDisp(0, vFourbarServo1.fourBarEnter());
 
-        TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-45,-2,0))
+        TrajectoryActionBuilder lineUp1 = drive.actionBuilder(new Pose2d(-48,-2,0))
                 .strafeTo(new Vector2d(-32, -2)); // go forward to line up specimen
 
         TrajectoryActionBuilder reset1 = drive.actionBuilder(new Pose2d(-32, -2,0))
@@ -519,18 +518,18 @@ public class ambienceRR extends LinearOpMode {
                 .strafeTo(new Vector2d(-42,-2));
 
         TrajectoryActionBuilder get2 = drive.actionBuilder(new Pose2d(-42,-2,0))
-                .strafeTo(new Vector2d(-59,-42))
+                .strafeTo(new Vector2d(-57.5,-42))
                 .afterTime(0, vFourbarServo1.fourBarGrab());
 
-        TrajectoryActionBuilder unHook3 = drive.actionBuilder(new Pose2d(-59,-42,0))
+        TrajectoryActionBuilder unHook3 = drive.actionBuilder(new Pose2d(-57.5,-42,0))
                 .strafeTo(new Vector2d(-63 , -42)) // go forward to  enter pos
                 .afterTime(0, vFourbarServo1.fourBarUp());
 
         TrajectoryActionBuilder enterPos2 = drive.actionBuilder(new Pose2d(-63,-42,0))
-                .strafeTo(new Vector2d(-45 , 1))
+                .strafeTo(new Vector2d(-48 , 1))
                 .afterDisp(0, vFourbarServo1.fourBarEnter());
 
-        TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-45,1,0))
+        TrajectoryActionBuilder lineUp2 = drive.actionBuilder(new Pose2d(-48,1,0))
                 .strafeTo(new Vector2d(-32, 1)); // go forward to line up specimen
 
         // replace later with action of placing specimen
@@ -539,18 +538,18 @@ public class ambienceRR extends LinearOpMode {
                 .strafeTo(new Vector2d(-42,1));
 
         TrajectoryActionBuilder get3 = drive.actionBuilder(new Pose2d(-42,1,0))
-                .strafeTo(new Vector2d(-59,-42))
+                .strafeTo(new Vector2d(-57.5,-42))
                 .afterTime(0, vFourbarServo1.fourBarGrab());
 
-        TrajectoryActionBuilder unHook4 = drive.actionBuilder(new Pose2d(-59,-42,0))
+        TrajectoryActionBuilder unHook4 = drive.actionBuilder(new Pose2d(-57.5,-42,0))
                 .strafeTo(new Vector2d(-63 , -42)) // go forward to  enter pos
                 .afterTime(0, vFourbarServo1.fourBarUp());
 
         TrajectoryActionBuilder enterPos3 = drive.actionBuilder(new Pose2d(-63,-42,0))
-                .strafeTo(new Vector2d(-45 , 4))
+                .strafeTo(new Vector2d(-48 , 4))
                 .afterDisp(0, vFourbarServo1.fourBarEnter());
 
-        TrajectoryActionBuilder lineUp3 = drive.actionBuilder(new Pose2d(-45,4,0))
+        TrajectoryActionBuilder lineUp3 = drive.actionBuilder(new Pose2d(-48,4,0))
                 .strafeTo(new Vector2d(-32, 4)); // go forward to line up specimen
         // replace later with action of placing specimen
         TrajectoryActionBuilder reset3 = drive.actionBuilder(new Pose2d(-32, 4,0))
@@ -616,6 +615,7 @@ public class ambienceRR extends LinearOpMode {
                         // vFourbarServo1.fourBarPlace(),
                         clawServo.closeClaw(),
                         pushAction,
+                        vFourbarServo1.fourBarGrab(),
                         clawServo.openClaw(),
                         unhook1,
                         // vFourbarServo2.fourBarUp(),

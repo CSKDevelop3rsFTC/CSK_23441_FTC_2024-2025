@@ -170,7 +170,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             if (activeClaw){
                 activeClaw = false;
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.45);
+                clawServo.setPosition(0.44);
             }
         }
     }
@@ -257,19 +257,19 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
     public void slideMovement() {
         if (gamepad2.left_trigger > 0) {
-            drop();
-            drop2();
+            //drop();
+            //drop2();
         }
 
         else if (gamepad2.right_trigger > 0) {
-            lift();
-            lift2();
+            //lift();
+            //lift2();
 
         }
         else if (gamepad2.a) {
             vSlides("hold");
-            reset();
-            reset2();
+            //reset();
+            //reset2();
 
         }
         /**
@@ -291,24 +291,24 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             vFourbarServo2.setPosition(0.0);
             vFourbarServo1.setPosition(0.8);
             sleep(300);
-            clawServo.setPosition(0.35);
+            clawServo.setPosition(0.27);
             activeClaw = true;
         }
 
         else if (vPos == "enter") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo1.setPosition(0.46);
+            vFourbarServo1.setPosition(0.64);
             sleep(350);
-            vFourbarServo2.setPosition(0.79);
+            vFourbarServo2.setPosition(0.69);
         }
 
         else if (vPos == "grab") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.2);
+            vFourbarServo2.setPosition(0.2); //0.23
             sleep(350);
-            vFourbarServo1.setPosition(0.98);
+            vFourbarServo1.setPosition(0.94);
         }
         else if (vPos == "up"){
             vFourbarServo_1.setPwmEnable();
@@ -317,11 +317,11 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             sleep(350);
         }
         else if (vPos == "place"){
-            vFourbarServo_1.setPwmDisable();
+            vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmDisable();
-            vFourbarServo1.setPosition(0.55); //previously 0.49
-            sleep(350);
-            vFourbarServo2.setPosition(0.46);
+             vFourbarServo1.setPosition(0.6);
+            // sleep(350);
+            vFourbarServo2.setPosition(0.55);
 
         }
 
@@ -338,18 +338,21 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         else if (vPos == "hold") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.0);
+            vFourbarServo2.setPosition(0.0); //0
             sleep(350);
-            vFourbarServo1.setPosition(0.67);
+            vFourbarServo1.setPosition(0.67); //0.67
         }
 
         else if (vPos == "drop") {
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.9);
+            vFourbarServo2.setPosition(0.95);
             sleep(200);
-            clawServo.setPosition(0.6);
+            vFourbarServo1.setPosition(0.25);
+            sleep(300);
+            clawServo.setPosition(0.44);
             activeClaw = false;
         }
+
 
 
 
@@ -370,7 +373,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             vSlides("zero");
             sleep(350);
             clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(0.5);
+            clawServo.setPosition(0.27);
             activeClaw = true;
             sleep(150);
             vSlides("ready");
@@ -381,7 +384,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             vSlides("zero");
             sleep(250);
             clawServo.setDirection(Servo.Direction.FORWARD);
-            clawServo.setPosition(0.5);
+            clawServo.setPosition(0.27);
             activeClaw = true;
             sleep(200);
             vSlides("ready");
@@ -405,25 +408,32 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
     public void slidesFourBar() {
 
-        if (gamepad2.y) {
-            vSlides("zero");
-        } else if (gamepad2.right_bumper) {
-            vSlides("ready");
-        } else if (gamepad2.left_bumper) {
-            vSlides("drop");
-        }
 
-        if (gamepad1.x) {
-            vSlides("enter");
-        }
-        else if (gamepad1.y) {
+        if (gamepad2.y) {
             vSlides("grab");
-        }
-        else if (gamepad1.b) {
+        } else if (gamepad2.right_bumper) {
+            vSlides("enter");
+        } else if (gamepad2.left_bumper) {
             vSlides("place");
         }
 
+
+        if (gamepad1.x) {
+            vSlides("drop");
+        }
+
+        else if (gamepad1.y) {
+
+        }
+        else if (gamepad1.b) {
+
+        }
+
+
+
     }
+
+
 
     public void hzMovement() {
 
@@ -457,8 +467,8 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             hzFourbarServo1.setPosition(0.13);
             hzFourbarServo2.setPosition(0.13);
             sleep(50);
-            hzSlidesServo2.setPosition(0.98);
-            hzSlidesServo1.setPosition(0.88);
+            hzSlidesServo2.setPosition(0.94);
+            hzSlidesServo1.setPosition(0.84);
             sleep(500);
             contSpin(false);
             outPos1 = false;
@@ -469,18 +479,23 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
     public void hzFourBar() {
         ServoImplEx hzFourBarServo_1 = (ServoImplEx) hzFourbarServo1;
         ServoImplEx hzFourBarServo_2 = (ServoImplEx) hzFourbarServo2;
+
         if (gamepad1.a) {
             hzFourBarServo_1.setPwmEnable();
             hzFourBarServo_2.setPwmEnable();
             hzFourbarServo1.setPosition(1);
             hzFourbarServo2.setPosition(1);
         }
+
+
     }
 
     public void reGamepad() {
         previousGamePad1.copy(currentGamepad1);
         currentGamepad1.copy(gamepad1);
     }
+
+
 
     public void run(double verticalPosition, double horizontalPosition, double pivot){
 
