@@ -97,7 +97,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         hzFourbarServo1.setDirection(Servo.Direction.REVERSE);
 
         vFourbarServo1.setDirection(Servo.Direction.REVERSE);
-        vFourbarServo2.setDirection(Servo.Direction.REVERSE);
+        vFourbarServo2.setDirection(Servo.Direction.FORWARD);
 
         cSense.enableLed(true);
 
@@ -170,7 +170,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
             if (activeClaw){
                 activeClaw = false;
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.44);
+                clawServo.setPosition(0.54);
             }
         }
     }
@@ -182,7 +182,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         if (gamepad2.b) {
             if (!activeClaw) {
                 clawServo.setDirection(Servo.Direction.FORWARD);
-                clawServo.setPosition(0.24);
+                clawServo.setPosition(0.44);
                 activeClaw = true;
             }
         }
@@ -288,40 +288,28 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         if (vPos == "zero") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0.05); //0
+            vFourbarServo1.setPosition(0.81);
             vFourbarServo2.setPosition(0.0);
-            vFourbarServo1.setPosition(0.8);
             sleep(300);
-            clawServo.setPosition(0.27);
+            clawServo.setPosition(0.49);
             activeClaw = true;
         }
 
         else if (vPos == "enter") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo1.setPosition(0.64);
+            vFourbarServo1.setPosition(0.74);
             sleep(350);
             vFourbarServo2.setPosition(0.69);
         }
 
-        else if (vPos == "grab") {
-            vFourbarServo_1.setPwmEnable();
-            vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.2); //0.23
-            sleep(350);
-            vFourbarServo1.setPosition(0.94);
-        }
-        else if (vPos == "up"){
-            vFourbarServo_1.setPwmEnable();
-            vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.21);
-            sleep(350);
-        }
         else if (vPos == "place"){
             vFourbarServo_1.setPwmEnable();
-            vFourbarServo_2.setPwmDisable();
-             vFourbarServo1.setPosition(0.6);
-            // sleep(350);
-            vFourbarServo2.setPosition(0.55);
+            vFourbarServo_2.setPwmEnable();
+            vFourbarServo1.setPosition(0.33);
+            sleep(350);
+            vFourbarServo2.setPosition(0.39);
 
         }
 
@@ -338,18 +326,19 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
         else if (vPos == "hold") {
             vFourbarServo_1.setPwmEnable();
             vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.0); //0
+            vFourbarServo1.setPosition(0.43); //0.67
             sleep(350);
-            vFourbarServo1.setPosition(0.67); //0.67
+            vFourbarServo2.setPosition(0.75); //0
+
         }
 
         else if (vPos == "drop") {
-            vFourbarServo_2.setPwmEnable();
-            vFourbarServo2.setPosition(0.95);
+            //vFourbarServo_2.setPwmEnable();
+            vFourbarServo2.setPosition(0);
+            sleep(350);
+            vFourbarServo1.setPosition(0.08);
             sleep(200);
-            vFourbarServo1.setPosition(0.25);
-            sleep(300);
-            clawServo.setPosition(0.44);
+            clawServo.setPosition(0.54);
             activeClaw = false;
         }
 
@@ -399,7 +388,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
             vSlides("zero");
             sleep(150);
-            vSlides("ready");
+            //vSlides("ready");
 
             cTest = "yellow";
         }
@@ -408,10 +397,7 @@ public class MeetTwoTeleOpBlue extends LinearOpMode {
 
     public void slidesFourBar() {
 
-
-        if (gamepad2.y) {
-            vSlides("grab");
-        } else if (gamepad2.right_bumper) {
+        if (gamepad2.right_bumper) {
             vSlides("enter");
         } else if (gamepad2.left_bumper) {
             vSlides("place");
